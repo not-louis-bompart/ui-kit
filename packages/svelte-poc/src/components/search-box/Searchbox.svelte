@@ -7,13 +7,17 @@
     searchAsYouType && search();
   }
 
+  function onKeyDown(e) {
+    e.key === 'Enter' && search();
+  }
+  
   function search() {
     console.log(`your value is ${value}`)
   }
 </script>
 
 <div>
-	<input on:change={updateValue}/>
+	<input on:input={updateValue} on:keydown={onKeyDown}/>
 </div>
 
 <style>
