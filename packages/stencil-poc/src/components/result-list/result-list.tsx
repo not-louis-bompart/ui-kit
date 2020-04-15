@@ -1,5 +1,5 @@
-import { Component, h, Build } from '@stencil/core';
-import { HeadlessResultList } from '../../headless/result-list';
+import { Component, h, Build, State } from '@stencil/core';
+import { headlessEngine } from '../../headless/store'
 
 @Component({
   tag: 'result-list',
@@ -8,7 +8,8 @@ import { HeadlessResultList } from '../../headless/result-list';
 })
 
 export class ResultList {
-  private resultList: HeadlessResultList;
+  @State() state: any = undefined;
+  private unsubscribe = () => {};
 
   async componentWillLoad() {
     if (Build.isBrowser) {
@@ -18,8 +19,16 @@ export class ResultList {
       script.src = 'ssr';
       window.document.body.append(script);
     }
+    
+    this.unsubscribe = headlessEngine.reduxStore.subscribe(() => this.updateState());
+  }
 
-    this.resultList = new HeadlessResultList();
+  private updateState() {
+    this.state = headlessEngine.reduxStore.getState();
+  }
+
+  async componentDidUnload() {
+    this.unsubscribe();
   }
 
   private buildResult(result) {
@@ -27,7 +36,7 @@ export class ResultList {
   }
 
   private get resultElements() {
-    return this.resultList.results.map(result => this.buildResult(result));
+    return this.state ? this.state.results.list.map(result => this.buildResult(result)) : [];
   }
 
   render() {

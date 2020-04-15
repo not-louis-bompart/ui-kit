@@ -1,5 +1,2 @@
-import { createStore } from "@stencil/store";
-
-const { state } = createStore({ response: { results: [] }})
-
-export default state;
+import {CoveoHeadlessEngine} from 'coveo-headless-engine';
+export const headlessEngine = new CoveoHeadlessEngine();
