@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "module": "ES2015",
+    "lib": [
+      "dom",
+      "es2017"
+    ]
+  },
+  "include": [
+    "src"
+  ]
+}
