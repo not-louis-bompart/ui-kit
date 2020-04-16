@@ -7,6 +7,12 @@ export type CoveoComponent = Type<any> & { tagname: string };
 
 export abstract class CoveoModule {
   constructor(private injector: Injector) {
+    this.declareComponents();
+  }
+
+  protected abstract getComponents(): CoveoComponent[];
+
+  private declareComponents() {
     this.getComponents().forEach(component => {
       customElements.define(
         `${elementPrefix}-${component.tagname}`,
@@ -14,8 +20,6 @@ export abstract class CoveoModule {
       );
     });
   }
-
-  protected abstract getComponents(): CoveoComponent[];
 
   ngDoBootstrap() {}
 }

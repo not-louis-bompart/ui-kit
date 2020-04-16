@@ -10,7 +10,7 @@ import { CoveoModule, CoveoComponent } from '../coveomodule';
   imports: [
     CommonModule
   ],
-  bootstrap: []
+  exports: [SearchboxComponent]
 })
 export class SearchboxModule extends CoveoModule {
   constructor(injector: Injector) {

@@ -10,7 +10,13 @@ export class SearchboxComponent implements OnInit {
     return 'searchbox';
   }
 
+  words = ['abc'];
+
   constructor() { }
+
+  addWord() {
+    this.words = [...this.words, (Math.random() * 255).toString(16)];
+  }
 
   ngOnInit(): void {
   }
