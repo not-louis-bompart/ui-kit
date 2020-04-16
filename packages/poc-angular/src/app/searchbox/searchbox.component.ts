@@ -1,23 +1,51 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {CoveoService} from '../coveo.service';
+
+export interface SearchboxSuggestion {
+  uri: string;
+  title: string;
+}
 
 @Component({
-  selector: 'app-searchbox',
   templateUrl: './searchbox.component.html',
-  styleUrls: ['./searchbox.component.scss']
+  styleUrls: ['./searchbox.component.scss'],
 })
 export class SearchboxComponent implements OnInit {
   public static get tagname() {
     return 'searchbox';
   }
 
-  words = ['abc'];
+  suggestions: SearchboxSuggestion[] = [];
+  focused = false;
 
-  constructor() { }
+  constructor(private coveo: CoveoService) {}
 
-  addWord() {
-    this.words = [...this.words, (Math.random() * 255).toString(16)];
+  private subscribeToSuggestionsChange() {
+    this.coveo.subscribe(state => {
+      this.suggestions = state.results.list.map(result => ({
+        uri: result.clickUri,
+        title: result.title,
+      }));
+    });
+  }
+
+  private search(expression: string) {
+    this.coveo.search(expression);
+  }
+
+  onFocus() {
+    this.focused = true;
+  }
+
+  onBlur() {
+    this.focused = false;
+  }
+
+  onTyped(e: Event) {
+    this.search((e.currentTarget as HTMLInputElement).value);
   }
 
   ngOnInit(): void {
+    this.subscribeToSuggestionsChange();
   }
 }

@@ -1,0 +1,39 @@
+$border-color: rgb(36, 36, 36);
+$text-color: rgb(36, 36, 36);
+$border: 1px solid $border-color;
+
+:host {
+
+  > ul {
+    display: inline-flex;
+    flex-direction: column;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+      display: inline-block;
+      border: $border;
+      border-bottom: none;
+      padding: 0;
+  
+      &:last-child {
+        border-bottom: $border;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+  
+      a {
+        display: flex;
+        flex-grow: 1;
+        margin: 0;
+        padding: 5px;
+        text-decoration: none;
+        color: $text-color;
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+  }
+
+}

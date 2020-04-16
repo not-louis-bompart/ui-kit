@@ -1,1 +1,4 @@
-<p (click)="addWord()">searchbox works! Here are some words: {{ words }}</p>
+<div id='searchbox-root' (focusin)="onFocus()" (focusout)="onBlur()">
+  <input type="text" (keyup)="onTyped($event)" />
+  <app-searchbox-suggestions [suggestions]="suggestions" *ngIf="focused && suggestions.length"></app-searchbox-suggestions>
+</div>
