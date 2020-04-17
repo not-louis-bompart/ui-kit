@@ -1,0 +1,7 @@
+<ng-template [ngIf]="results.length" [ngIfElse]="noresults">
+  <app-result *ngFor="let result of results" [result]="result"></app-result>
+</ng-template>
+
+<ng-template #noresults>
+  <div>No results</div>
+</ng-template>

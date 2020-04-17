@@ -2,14 +2,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { SearchboxModule } from './searchbox/searchbox.module';
+import { ResultListModule } from './resultlist/resultlist.module';
 
 @NgModule({
   imports: [
     BrowserModule,
-    SearchboxModule
+    SearchboxModule,
+    ResultListModule
   ],
   providers: [],
-  bootstrap: []
+  bootstrap: [],
+  declarations: []
 })
 export class AppModule {
   ngDoBootstrap() {}

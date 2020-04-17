@@ -1,3 +1,10 @@
 <ul>
-  <li *ngFor="let suggestion of suggestions"><a href="{{suggestion.uri}}" title={{suggestion.title}}>{{suggestion.title}}</a></li>
+  <li *ngFor="let suggestion of suggestions">
+    <a
+      href="?q={{suggestion.title}}"
+      title={{suggestion.title}}
+    >
+      {{suggestion.title}}
+    </a>
+  </li>
 </ul>
