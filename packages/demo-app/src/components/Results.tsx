@@ -6,17 +6,27 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
+import {engine} from '../Engine';
+import {Result, ResultList, ResultListState, searchActions} from '@coveo/headless';
 
 export default class Results extends React.Component {
+  private resultList!: ResultList;
+  state!: ResultListState;
+
+  componentWillMount() {
+    this.resultList = new ResultList(engine);
+    this.resultList.subscribe(() => this.updateState());
+    engine.dispatch(searchActions.executeSearch());
+  }
+
+  updateState() {
+    this.setState(this.resultList.state);
+  }
+
   render() {
     return (
       <Grid container spacing={4}>
-        <ResultItem />
-        <ResultItem />
-        <ResultItem />
-        <ResultItem />
-        <ResultItem />
-        <ResultItem />
+        {this.state.results.map((result) => (<ResultItem result={result} />))}
       </Grid>
     );
   }
@@ -37,22 +47,22 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function ResultItem() {
+function ResultItem({result}: {result: Result}) {
   const classes = useStyles();
   return (
-    <Grid item key={'card'} xs={12} sm={6} md={3}>
+    <Grid item key={result.uniqueId} xs={12} sm={6} md={3}>
       <Card className={classes.card}>
         <CardMedia
           className={classes.cardMedia}
-          image="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png"
-          title="Title"
+          image={result.raw.ccimage}
+          title={result.title}
         />
         <CardContent className={classes.cardContent}>
           <Typography gutterBottom variant="subtitle1">
-            <Link href="#">Title</Link>
+            <Link href={result.clickUri}>{result.title}</Link>
           </Typography>
-          <Typography>Category</Typography>
-          <Typography>$999.99</Typography>
+          <Typography>{result.raw.cccategoryl2}</Typography>
+          <Typography>${result.raw.ccpriceretail}</Typography>
         </CardContent>
       </Card>
     </Grid>
