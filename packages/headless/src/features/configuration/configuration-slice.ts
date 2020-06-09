@@ -10,7 +10,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
   organizationId: '',
   accessToken: '',
   search: {
-    searchApiBaseUrl: 'https://globalplatform.cloud.coveo.com/rest/search',
+    searchApiBaseUrl: 'https://platform.cloud.coveo.com/rest/search',
   },
 });
 

@@ -11,13 +11,12 @@ export default class Results extends React.Component {
   render() {
     return (
       <Grid container spacing={4}>
-        <Result />
-        <Result />
-        <Result />
-        <Result />
-        <Result />
-        <Result />
-        <Result />
+        <ResultItem />
+        <ResultItem />
+        <ResultItem />
+        <ResultItem />
+        <ResultItem />
+        <ResultItem />
       </Grid>
     );
   }
@@ -38,21 +37,21 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function Result() {
+function ResultItem() {
   const classes = useStyles();
   return (
     <Grid item key={'card'} xs={12} sm={6} md={3}>
       <Card className={classes.card}>
         <CardMedia
           className={classes.cardMedia}
-          image="https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6338/6338815_sa.jpg"
-          title="Image title"
+          image="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png"
+          title="Title"
         />
         <CardContent className={classes.cardContent}>
           <Typography gutterBottom variant="subtitle1">
-            <Link href="#">Product Title</Link>
+            <Link href="#">Title</Link>
           </Typography>
-          <Typography>Product Category</Typography>
+          <Typography>Category</Typography>
           <Typography>$999.99</Typography>
         </CardContent>
       </Card>

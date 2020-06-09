@@ -13,3 +13,6 @@ export * as querySuggestActions from './features/query-suggest/query-suggest-act
 export * as redirectionActions from './features/redirection/redirection-actions';
 export * as numberOfResultsActions from './features/number-of-results/number-of-results-actions';
 export * as sortCriterionActions from './features/sort-criterion/sort-criterion-actions';
+export * as searchActions from './features/search/search-actions';
+
+export {Result} from './api/search/search/result';

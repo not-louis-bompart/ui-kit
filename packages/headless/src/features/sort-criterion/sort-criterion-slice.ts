@@ -7,7 +7,7 @@ import {
 export type SortCriteriaState = string;
 
 export function getSortCriteriaInitialState(): SortCriteriaState {
-  return '';
+  return 'relevancy';
 }
 
 export const sortCriteriaReducer = createReducer(

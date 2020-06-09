@@ -1,31 +1,20 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import SearchIcon from '@material-ui/icons/Search';
-
-const options = ['Suggestion', 'Another suggestion'];
 
 export default class SearchBox extends React.Component {
-  state = {
-    value: null,
-    inputValue: '',
-  };
+  state = {value: ''};
 
   render() {
     return (
       <Autocomplete
-        value={this.state.value}
-        freeSolo
-        onChange={(_, newValue: string | null) => {
-          this.setState({value: newValue});
-        }}
-        inputValue={this.state.inputValue}
+        inputValue={this.state.value}
         onInputChange={(_, newInputValue) => {
-          this.setState({inputValue: newInputValue});
+          this.setState({value: newInputValue});
         }}
         id="controllable-states-demo"
-        options={options}
+        options={['suggestion 1', 'suggestion 2', 'suggestion 3']}
+        freeSolo
         style={{width: 300}}
         renderInput={(params) => (
           <TextField

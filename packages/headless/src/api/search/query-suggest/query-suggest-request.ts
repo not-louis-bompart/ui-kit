@@ -14,6 +14,7 @@ export const querySuggestRequestParams = (
    * The basic query expression for which to get completion.
    */
   q: state.querySuggest[id]!.q,
+  pipeline: 'CommerceML',
 });
 
 export type QuerySuggestRequestParams = ReturnType<

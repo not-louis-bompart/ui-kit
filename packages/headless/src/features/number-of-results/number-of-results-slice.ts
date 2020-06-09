@@ -7,7 +7,7 @@ import {
 export type NumberOfResultsState = number;
 
 export function getNumberOfResultsInitialState(): NumberOfResultsState {
-  return -1;
+  return 20;
 }
 
 export const numberOfResultsReducer = createReducer(
