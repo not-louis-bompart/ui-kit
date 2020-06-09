@@ -7,18 +7,20 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 
-export default function Results() {
-  return (
-    <Grid container spacing={4}>
-      <Result />
-      <Result />
-      <Result />
-      <Result />
-      <Result />
-      <Result />
-      <Result />
-    </Grid>
-  );
+export default class Results extends React.Component {
+  render() {
+    return (
+      <Grid container spacing={4}>
+        <Result />
+        <Result />
+        <Result />
+        <Result />
+        <Result />
+        <Result />
+        <Result />
+      </Grid>
+    );
+  }
 }
 
 const useStyles = makeStyles(() => ({
