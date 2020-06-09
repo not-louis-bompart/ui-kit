@@ -18,17 +18,5 @@
     "lint-staged": "^10.0.8",
     "typedoc": "https://github.com/coveord/typedoc",
     "typescript": "^3.9.2"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "node ./hooks/commit-msg.js",
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "**/*.ts?(x)": [
-      "npm run fix",
-      "git add"
-    ]
   }
 }
