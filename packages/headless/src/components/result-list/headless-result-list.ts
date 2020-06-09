@@ -1,11 +1,11 @@
-import {Engine} from '../../app/headless-engine';
+import {SomeEngine} from '../../app/headless-engine';
 import {Component} from '../component/headless-component';
 
 /** The state relevant to the `ResultList` component.*/
 export type ResultListState = ResultList['state'];
 
 export class ResultList extends Component {
-  constructor(engine: Engine) {
+  constructor(engine: SomeEngine) {
     super(engine);
   }
 

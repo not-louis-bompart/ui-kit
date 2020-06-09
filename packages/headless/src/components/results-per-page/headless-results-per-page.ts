@@ -1,4 +1,4 @@
-import {Engine} from '../../app/headless-engine';
+import {SomeEngine} from '../../app/headless-engine';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
@@ -15,7 +15,7 @@ export type ResultsPerPageState = ResultsPerPage['state'];
 
 export class ResultsPerPage extends Component {
   constructor(
-    engine: Engine,
+    engine: SomeEngine,
     private options: Partial<ResultsPerPageOptions> = {}
   ) {
     super(engine);

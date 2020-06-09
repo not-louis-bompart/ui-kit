@@ -1,7 +1,7 @@
-import {Engine} from '../../app/headless-engine';
+import {SomeEngine} from '../../app/headless-engine';
 
 export abstract class Component {
-  constructor(protected engine: Engine) {}
+  constructor(protected engine: SomeEngine) {}
 
   /**
    * Adds a callback that will be called on state change.

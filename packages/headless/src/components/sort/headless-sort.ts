@@ -1,4 +1,4 @@
-import {Engine} from '../../app/headless-engine';
+import {SomeEngine} from '../../app/headless-engine';
 import {
   registerSortCriterion,
   updateSortCriterion,
@@ -23,7 +23,7 @@ export class Sort extends Component {
     criterion: buildEmptySortCriterion(),
   };
 
-  constructor(engine: Engine, options: Partial<SortOptions>) {
+  constructor(engine: SomeEngine, options: Partial<SortOptions>) {
     super(engine);
     this.options = {...this.options, ...options};
     this.register();

@@ -57,7 +57,7 @@ export interface HeadlessConfigurationOptions {
   };
 }
 
-export interface Engine {
+export interface SomeEngine {
   dispatch: ThunkDispatch<any, null, AnyAction> &
     ThunkDispatch<any, undefined, AnyAction> &
     Dispatch<AnyAction>;
@@ -70,7 +70,7 @@ export interface Engine {
  * You should instantiate one `Engine` class per application and share it.
  * Every headless component requires an instance of `Engine` as a parameter.
  */
-export class ReduxEngine implements Engine {
+export class Engine implements SomeEngine {
   private reduxStore: Store;
 
   constructor(options: HeadlessOptions) {

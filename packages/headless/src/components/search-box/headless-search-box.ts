@@ -6,7 +6,7 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../features/query-suggest/query-suggest-actions';
-import {Engine} from '../../app/headless-engine';
+import {SomeEngine} from '../../app/headless-engine';
 import {randomID} from '../../utils/utils';
 import {updateQuery} from '../../features/query/query-actions';
 import {
@@ -54,7 +54,7 @@ export class SearchBox extends Component {
     numberOfSuggestions: 5,
   };
 
-  constructor(engine: Engine, options: Partial<SearchBoxOptions> = {}) {
+  constructor(engine: SomeEngine, options: Partial<SearchBoxOptions> = {}) {
     super(engine);
     this.options = {...this.options, ...options};
 

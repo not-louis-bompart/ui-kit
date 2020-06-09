@@ -1,4 +1,4 @@
-import {ReduxEngine, HeadlessOptions} from './headless-engine';
+import {Engine, HeadlessOptions} from './headless-engine';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
@@ -17,8 +17,8 @@ describe('headless engine', () => {
       .spyOn(storeConfig, 'configureStore')
       .mockReturnValue(store);
 
-    options = {configuration: ReduxEngine.getSampleConfiguration()};
-    new ReduxEngine(options);
+    options = {configuration: Engine.getSampleConfiguration()};
+    new Engine(options);
   });
 
   it('should call configureStore', () => {
@@ -48,7 +48,7 @@ describe('headless engine', () => {
       },
     };
 
-    new ReduxEngine(options);
+    new Engine(options);
     expect(store.dispatch).not.toHaveBeenCalledWith(
       updateSearchConfiguration(options.configuration.search!)
     );
