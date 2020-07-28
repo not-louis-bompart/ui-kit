@@ -4,6 +4,11 @@ import {PlanRequestParams} from './plan/plan-request';
 import {QuerySuggestRequestParams} from './query-suggest/query-suggest-request';
 import {createMockState} from '../../test/mock-state';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
+import {
+  getAdvancedQueries,
+  getOrganizationIdParam,
+  getQParam,
+} from './search-request';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -23,14 +28,11 @@ describe('search api client', () => {
       contentType: 'application/json',
       url: `${state.configuration.search.searchApiBaseUrl}/plan`,
       requestParams: {
-        organizationId: state.configuration.organizationId,
-        q: state.query.q,
+        ...getOrganizationIdParam(state),
+        ...getQParam(state),
+        ...getAdvancedQueries(state),
         context: state.context.contextValues,
         pipeline: state.pipeline,
-        aq: Object.keys(state.querySet.aq).join(' '),
-        cq: Object.keys(state.querySet.cq).join(' '),
-        dq: Object.keys(state.querySet.dq).join(' '),
-        lq: Object.keys(state.querySet.lq).join(' '),
       },
     };
 
