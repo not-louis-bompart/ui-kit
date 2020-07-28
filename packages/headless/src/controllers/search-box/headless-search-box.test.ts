@@ -47,7 +47,7 @@ describe('headless searchBox', () => {
   function initState() {
     state = createMockState();
     state.redirection.redirectTo = 'coveo.com';
-    state.querySet[id] = 'query';
+    state.querySet.q[id] = 'query';
     state.querySuggest[id] = buildMockQuerySuggest({id, q: 'some value'});
   }
 
@@ -78,7 +78,7 @@ describe('headless searchBox', () => {
 
   it('should return the right state', () => {
     expect(searchBox.state).toEqual({
-      value: state.querySet[id],
+      value: state.querySet.q[id],
       suggestions: state.querySuggest[id]!.completions.map((completion) => ({
         value: completion.expression,
       })),
@@ -87,7 +87,7 @@ describe('headless searchBox', () => {
   });
 
   it('should dispatch a registerQuerySetQuery action at initialization', () => {
-    const action = registerQuerySetQuery({id: searchBox.id, query: ''});
+    const action = registerQuerySetQuery({id: searchBox.id, expression: ''});
     expect(engine.actions).toContainEqual(action);
   });
 
@@ -106,7 +106,7 @@ describe('headless searchBox', () => {
       const text = 'query';
       searchBox.updateText(text);
 
-      const action = updateQuerySetQuery({id: searchBox.id, query: text});
+      const action = updateQuerySetQuery({id: searchBox.id, expression: text});
       expect(engine.actions).toContainEqual(action);
     });
 
@@ -170,7 +170,7 @@ describe('headless searchBox', () => {
 
   describe('when calling submit', () => {
     it('sets the query to the search box value kept in the querySet', () => {
-      const expectedQuery = state.querySet[searchBox.id];
+      const expectedQuery = state.querySet.q[searchBox.id];
       searchBox.submit();
 
       expect(engine.actions).toContainEqual(updateQuery({q: expectedQuery}));

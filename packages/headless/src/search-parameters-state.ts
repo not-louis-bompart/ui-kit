@@ -32,7 +32,7 @@ export interface SearchParametersState {
    */
   context: ContextState;
   /**
-   * The set of basic query expressions.
+   * The set of query expressions.
    */
   querySet: QuerySetState;
   /**

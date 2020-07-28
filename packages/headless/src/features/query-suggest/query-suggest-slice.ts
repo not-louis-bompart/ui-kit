@@ -45,10 +45,10 @@ export const querySuggestReducer = createReducer(
         state[action.payload!.id]!.error = action.payload!;
       })
       .addCase(updateQuerySetQuery, (state, action) => {
-        const {id, query} = action.payload;
+        const {id, expression} = action.payload;
 
         if (id in state) {
-          state[id]!.q = query;
+          state[id]!.q = expression;
         }
       })
       .addCase(clearQuerySuggest, (state, action) => {

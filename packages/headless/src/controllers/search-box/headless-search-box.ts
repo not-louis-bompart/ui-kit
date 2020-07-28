@@ -92,7 +92,9 @@ export class SearchBox extends Controller {
    * @param value  The string value to update the search box with.
    */
   public updateText(value: string) {
-    this.dispatch(updateQuerySetQuery({id: this.options.id, query: value}));
+    this.dispatch(
+      updateQuerySetQuery({id: this.options.id, expression: value})
+    );
 
     if (this.options.numberOfSuggestions) {
       this.showSuggestions();
@@ -156,7 +158,7 @@ export class SearchBox extends Controller {
     const state = this.engine.state;
     const querySuggestState = state.querySuggest[this.options.id]!;
     return {
-      value: state.querySet[this.options.id],
+      value: state.querySet.q[this.options.id],
       suggestions: querySuggestState.completions.map((completion) => ({
         value: completion.expression,
       })),
@@ -165,7 +167,7 @@ export class SearchBox extends Controller {
   }
 
   private registerQuery() {
-    const action = registerQuerySetQuery({id: this.options.id, query: ''});
+    const action = registerQuerySetQuery({id: this.options.id, expression: ''});
     this.dispatch(action);
   }
 

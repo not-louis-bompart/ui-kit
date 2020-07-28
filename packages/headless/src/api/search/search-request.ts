@@ -15,6 +15,13 @@ export const getQParam = (state: SearchPageState) => ({
   q: state.query.q,
 });
 
+export const getAdvancedQueries = (state: SearchPageState) => ({
+  aq: Object.values(state.querySet.aq).join(' '),
+  cq: Object.values(state.querySet.cq).join(' '),
+  dq: Object.values(state.querySet.dq).join(' '),
+  lq: Object.values(state.querySet.lq).join(' '),
+});
+
 const getAccessToken = (state: SearchPageState) =>
   state.configuration.accessToken;
 const getSearchApiBaseUrl = (state: SearchPageState) =>

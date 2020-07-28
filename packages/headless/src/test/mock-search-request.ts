@@ -12,6 +12,10 @@ export function buildMockSearchRequest(
     q: '',
     sortCriteria: 'relevancy',
     pipeline: '',
+    aq: '',
+    cq: '',
+    dq: '',
+    lq: '',
     ...config,
   };
 }

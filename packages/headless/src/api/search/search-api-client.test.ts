@@ -27,6 +27,10 @@ describe('search api client', () => {
         q: state.query.q,
         context: state.context.contextValues,
         pipeline: state.pipeline,
+        aq: Object.keys(state.querySet.aq).join(' '),
+        cq: Object.keys(state.querySet.cq).join(' '),
+        dq: Object.keys(state.querySet.dq).join(' '),
+        lq: Object.keys(state.querySet.lq).join(' '),
       },
     };
 

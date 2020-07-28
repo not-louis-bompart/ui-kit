@@ -1,9 +1,14 @@
 import {SearchPageState} from '../../../state';
-import {getQParam, getOrganizationIdParam} from '../search-request';
+import {
+  getQParam,
+  getOrganizationIdParam,
+  getAdvancedQueries,
+} from '../search-request';
 
 export const planRequestParams = (state: SearchPageState) => ({
   ...getQParam(state),
   ...getOrganizationIdParam(state),
+  ...getAdvancedQueries(state),
   context: state.context.contextValues,
   pipeline: state.pipeline,
 });

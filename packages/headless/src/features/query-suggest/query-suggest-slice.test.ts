@@ -91,9 +91,9 @@ describe('querySuggest slice', () => {
   it(`when a query in the querySet is updated,
   does not update the query suggest query if the id is missing`, () => {
     const unknownId = '1';
-    const query = 'query';
+    const expression = 'query';
 
-    const action = updateQuerySetQuery({id: unknownId, query});
+    const action = updateQuerySetQuery({id: unknownId, expression});
     const finalState = querySuggestReducer(addToDefaultState({}), action);
 
     expect(finalState[unknownId]).toBe(undefined);
@@ -101,12 +101,12 @@ describe('querySuggest slice', () => {
 
   it(`when a query in the querySet is updated,
   it updates the query suggest query if the id exists`, () => {
-    const query = 'query';
+    const expression = 'query';
 
-    const action = updateQuerySetQuery({id, query});
+    const action = updateQuerySetQuery({id, expression});
     const finalState = querySuggestReducer(addToDefaultState({}), action);
 
-    expect(finalState[id]?.q).toBe(query);
+    expect(finalState[id]?.q).toBe(expression);
   });
 
   describe('fetchQuerySuggestions', () => {

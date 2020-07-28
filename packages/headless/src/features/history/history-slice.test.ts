@@ -5,6 +5,7 @@ import {Reducer} from 'redux';
 import {undoable, StateWithHistory, makeHistory} from '../../app/undoable';
 import {buildMockRangeFacetRequest} from '../../test/mock-range-facet-request';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
+import {getQuerySetInitialState} from '../query-set/query-set-slice';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<SearchParametersState>>;
@@ -64,7 +65,7 @@ describe('history slice', () => {
         totalCountFiltered: 789,
       },
       query: {q: 'foo'},
-      querySet: {foo: 'bar', hello: 'world'},
+      querySet: {...getQuerySetInitialState(), q: {foo: 'bar', hello: 'world'}},
       sortCriteria: 'date descending',
       pipeline: 'my-pipeline',
     };
