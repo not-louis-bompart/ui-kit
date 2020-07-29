@@ -1,5 +1,5 @@
 import {SearchPageState} from '../../../state';
-import {getQParam, getAdvancedQueries} from '../search-api-params';
+import {getQParam} from '../search-api-params';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {Context} from '../../../features/context/context-slice';
 import {RangeFacetRequest} from '../../../features/facets/range-facet-set/interfaces/request';
@@ -24,7 +24,6 @@ export interface SearchRequest {
 export const searchRequestParams = (state: SearchPageState): SearchRequest => {
   return {
     ...getQParam(state),
-    ...getAdvancedQueries(state),
     numberOfResults: state.pagination.numberOfResults,
     sortCriteria: state.sortCriteria,
     firstResult: state.pagination.firstResult,

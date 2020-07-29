@@ -7,10 +7,7 @@ import {
 } from '../facets/facet-set/facet-set-slice';
 import {getQueryInitialState} from '../query/query-slice';
 import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-slice';
-import {
-  getQuerySetInitialState,
-  QuerySetState,
-} from '../query-set/query-set-slice';
+import {getQuerySetInitialState} from '../query-set/query-set-slice';
 import {
   PaginationState,
   getPaginationInitialState,
@@ -55,8 +52,7 @@ const isEqual = (
     isPaginationEqual(current.pagination, next.pagination) &&
     isQueryEqual(current.query, next.query) &&
     isSortEqual(current, next) &&
-    isPipelineEqual(current.pipeline, next.pipeline) &&
-    isQuerySetEqual(current.querySet, next.querySet)
+    isPipelineEqual(current.pipeline, next.pipeline)
   );
 };
 
@@ -76,12 +72,9 @@ const isPaginationEqual = (current: PaginationState, next: PaginationState) =>
   current.numberOfResults === next.numberOfResults;
 
 const isQueryEqual = (current: QueryState, next: QueryState) =>
-  current.q === next.q;
+  JSON.stringify(current) === JSON.stringify(next);
 
 const isSortEqual = (current: SortState, next: SortState) =>
   current.sortCriteria === next.sortCriteria;
 
 const isPipelineEqual = (current: string, next: string) => current === next;
-
-const isQuerySetEqual = (current: QuerySetState, next: QuerySetState) =>
-  JSON.stringify(current) === JSON.stringify(next);
