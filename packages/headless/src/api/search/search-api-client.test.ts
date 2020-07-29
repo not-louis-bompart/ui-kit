@@ -33,6 +33,7 @@ describe('search api client', () => {
         ...getAdvancedQueries(state),
         context: state.context.contextValues,
         pipeline: state.pipeline,
+        searchHub: state.searchHub,
       },
     };
 
@@ -59,6 +60,7 @@ describe('search api client', () => {
         count: state.querySuggest[id]!.count,
         context: state.context.contextValues,
         pipeline: state.pipeline,
+        searchHub: state.searchHub,
       },
     };
 

@@ -18,6 +18,7 @@ export function buildMockSearchRequest(
     cq: '',
     dq: '',
     lq: '',
+    searchHub: '',
     ...config,
   };
 }

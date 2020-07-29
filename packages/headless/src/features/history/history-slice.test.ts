@@ -68,6 +68,7 @@ describe('history slice', () => {
       querySet: {...getQuerySetInitialState(), q: {foo: 'bar', hello: 'world'}},
       sortCriteria: 'date descending',
       pipeline: 'my-pipeline',
+      searchHub: 'my-search-hub',
     };
 
     expect(addSnapshot(expectedSnapshot).present).toEqual(expectedSnapshot);
@@ -106,6 +107,13 @@ describe('history slice', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
         getSnapshot({pipeline: 'foo'}),
         getSnapshot({pipeline: 'bar'})
+      );
+    });
+
+    it('for #searchHub', () => {
+      expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({searchHub: 'foo'}),
+        getSnapshot({searchHub: 'bar'})
       );
     });
 
