@@ -3,7 +3,7 @@ import {
   getQParam,
   getOrganizationIdParam,
   getAdvancedQueries,
-} from '../search-request';
+} from '../search-api-params';
 
 export const planRequestParams = (state: SearchPageState) => ({
   ...getQParam(state),
