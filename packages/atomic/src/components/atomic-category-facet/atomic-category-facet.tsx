@@ -36,14 +36,36 @@ export class AtomicCategoryFacet {
     this.state = this.categoryFacet.state;
   }
 
-  private get values() {
-    return this.state.values.map((listItem) => this.buildListItem(listItem));
+  private get parents() {
+    const parents = this.state.parents;
+
+    return parents.map((parent, i) => {
+      const isLast = i === parents.length - 1;
+      return this.buildParent(parent, isLast);
+    });
   }
 
-  private buildListItem(item: CategoryFacetValue) {
+  private buildParent(parent: CategoryFacetValue, isLast: boolean) {
     return (
-      <div>
-        <input type="checkbox"></input>
+      <div onClick={() => !isLast && this.categoryFacet.toggleSelect(parent)}>
+        <b>{parent.value}</b>
+      </div>
+    );
+  }
+
+  private get values() {
+    return this.state.values.map((value) => this.buildValue(value));
+  }
+
+  private buildValue(item: CategoryFacetValue) {
+    const definitelyHasNoMoreValues = item.moreValuesAvailable === false;
+
+    return (
+      <div
+        onClick={() =>
+          !definitelyHasNoMoreValues && this.categoryFacet.toggleSelect(item)
+        }
+      >
         <span>
           {item.value} {item.numberOfResults}
         </span>
@@ -57,6 +79,7 @@ export class AtomicCategoryFacet {
         <div>
           <span>{this.label}</span>
         </div>
+        <div>{this.parents}</div>
         <div>{this.values}</div>
       </div>
     );
