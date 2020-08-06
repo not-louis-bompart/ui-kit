@@ -16,4 +16,4 @@ export const registerDateFacet = createAction<DateFacetRegistrationOptions>(
 export const toggleSelectDateFacetValue = createAction<{
   facetId: string;
   selection: DateFacetValue;
-}>('dateFacet/selectValue');
+}>('dateFacet/toggleSelectValue');

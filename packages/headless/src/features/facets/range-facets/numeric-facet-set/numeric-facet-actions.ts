@@ -16,4 +16,4 @@ export const registerNumericFacet = createAction<
 export const toggleSelectNumericFacetValue = createAction<{
   facetId: string;
   selection: NumericFacetValue;
-}>('numericFacet/selectValue');
+}>('numericFacet/toggleSelectValue');
