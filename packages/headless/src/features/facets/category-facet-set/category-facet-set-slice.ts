@@ -51,6 +51,7 @@ export const categoryFacetSetReducer = createReducer(
             return;
           }
 
+          parent.state = 'idle';
           activeLevel = parent.children;
         }
 
@@ -61,6 +62,7 @@ export const categoryFacetSetReducer = createReducer(
 
         const valueRequest = convertCategoryFacetValueToRequest(selection);
         activeLevel.push(valueRequest);
+        request.numberOfValues = 1;
       });
   }
 );

@@ -90,63 +90,117 @@ describe('category facet slice', () => {
       expect(() => categoryFacetSetReducer(state, action)).not.toThrow();
     });
 
-    it('when currentValues is empty, it builds the correct request and adds it to currentValues', () => {
-      state[facetId] = buildMockCategoryFacetRequest({currentValues: []});
+    describe('when currentValues is empty', () => {
+      beforeEach(() => {
+        state[facetId] = buildMockCategoryFacetRequest({
+          currentValues: [],
+          numberOfValues: 5,
+        });
+      });
 
-      const selection = buildMockCategoryFacetValue({value: 'A', path: ['A']});
-      const action = toggleSelectCategoryFacetValue({facetId, selection});
-      const finalState = categoryFacetSetReducer(state, action);
-      const currentValues = finalState[facetId].currentValues;
+      it('builds a request from the selection and adds it to currentValues', () => {
+        const selection = buildMockCategoryFacetValue({
+          value: 'A',
+          path: ['A'],
+        });
+        const action = toggleSelectCategoryFacetValue({facetId, selection});
+        const finalState = categoryFacetSetReducer(state, action);
+        const currentValues = finalState[facetId].currentValues;
 
-      expect(currentValues).toEqual([
-        {
-          value: selection.value,
-          state: 'selected',
-          children: [],
-          retrieveChildren: true,
-          retrieveCount: 5,
-        },
-      ]);
+        expect(currentValues).toEqual([
+          {
+            value: selection.value,
+            state: 'selected',
+            children: [],
+            retrieveChildren: true,
+            retrieveCount: 5,
+          },
+        ]);
+      });
+
+      it('sets the numberOfValues to request to 1', () => {
+        const selection = buildMockCategoryFacetValue({
+          value: 'A',
+          path: ['A'],
+        });
+        const action = toggleSelectCategoryFacetValue({facetId, selection});
+        const finalState = categoryFacetSetReducer(state, action);
+
+        expect(finalState[facetId].numberOfValues).toBe(1);
+      });
     });
 
-    describe('when currentValues is populated', () => {
-      it(`when the selected value path contains the parent,
-      it adds the selection to the parent's children array`, () => {
-        const parent = buildMockCategoryFacetValueRequest({value: 'A'});
+    describe('when #currentValues contains one parent', () => {
+      beforeEach(() => {
+        const parent = buildMockCategoryFacetValueRequest({
+          value: 'A',
+          state: 'selected',
+        });
         state[facetId] = buildMockCategoryFacetRequest({
           currentValues: [parent],
         });
+      });
 
+      describe('when the selected value path contains the parent', () => {
         const selection = buildMockCategoryFacetValue({
           value: 'B',
           path: ['A', 'B'],
         });
         const action = toggleSelectCategoryFacetValue({facetId, selection});
-        const finalState = categoryFacetSetReducer(state, action);
 
-        const expected = buildMockCategoryFacetValueRequest({
-          value: selection.value,
-          retrieveChildren: true,
-          retrieveCount: 5,
-          state: 'selected',
+        it("adds the selection to the parent's children array", () => {
+          const finalState = categoryFacetSetReducer(state, action);
+          const expected = buildMockCategoryFacetValueRequest({
+            value: selection.value,
+            retrieveChildren: true,
+            retrieveCount: 5,
+            state: 'selected',
+          });
+
+          const children = finalState[facetId].currentValues[0].children;
+          expect(children).toEqual([expected]);
         });
 
-        expect(finalState[facetId].currentValues[0].children).toEqual([
-          expected,
-        ]);
+        it('sets the parent state to idle', () => {
+          const finalState = categoryFacetSetReducer(state, action);
+          expect(finalState[facetId].currentValues[0].state).toBe('idle');
+        });
       });
 
-      it(`when the selected value path contains two parents,
-      it adds the selection to the second parent's children array`, () => {
+      describe('when the selected value path does not contain the parent', () => {
+        const selection = buildMockCategoryFacetValue({
+          value: 'B',
+          path: ['C', 'B'],
+        });
+        const action = toggleSelectCategoryFacetValue({facetId, selection});
+
+        it("does not add the selection to the parent's children array", () => {
+          const finalState = categoryFacetSetReducer(state, action);
+          expect(finalState[facetId].currentValues[0].children).toEqual([]);
+        });
+
+        it('does not set the parent state to idle', () => {
+          const finalState = categoryFacetSetReducer(state, action);
+          expect(finalState[facetId].currentValues[0].state).toBe('selected');
+        });
+      });
+    });
+
+    describe('when #currentValues contains two parents', () => {
+      beforeEach(() => {
         const parentB = buildMockCategoryFacetValueRequest({value: 'B'});
         const parentA = buildMockCategoryFacetValueRequest({
           value: 'A',
           children: [parentB],
         });
+
         state[facetId] = buildMockCategoryFacetRequest({
           currentValues: [parentA],
         });
+      });
 
+      it(`when the selected value path contains the two parents,
+      it adds the selection to the second parent's children array`, () => {
         const selection = buildMockCategoryFacetValue({
           value: 'C',
           path: ['A', 'B', 'C'],
@@ -166,34 +220,7 @@ describe('category facet slice', () => {
         ).toEqual([expected]);
       });
 
-      it(`when the selected value path does not contain the parent,
-      it does not add the selection to the parent's children array`, () => {
-        const parent = buildMockCategoryFacetValueRequest({value: 'A'});
-        state[facetId] = buildMockCategoryFacetRequest({
-          currentValues: [parent],
-        });
-
-        const selection = buildMockCategoryFacetValue({
-          value: 'B',
-          path: ['C', 'B'],
-        });
-        const action = toggleSelectCategoryFacetValue({facetId, selection});
-        const finalState = categoryFacetSetReducer(state, action);
-
-        expect(finalState[facetId].currentValues[0].children).toEqual([]);
-      });
-
-      it(`when selecting a parent value,
-      it clears the children array of that parent.`, () => {
-        const parentB = buildMockCategoryFacetValueRequest({value: 'B'});
-        const parentA = buildMockCategoryFacetValueRequest({
-          value: 'A',
-          children: [parentB],
-        });
-        state[facetId] = buildMockCategoryFacetRequest({
-          currentValues: [parentA],
-        });
-
+      it('when selecting a parent value, it clears the children array of that parent', () => {
         const selection = buildMockCategoryFacetValue({
           value: 'A',
           path: ['A'],
