@@ -39,7 +39,7 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
 
   const getAnalyticsActionForToggleSelect = (selection: CategoryFacetValue) => {
     const payload: FacetSelectionChangeMetadata = {
-      facetId: options.facetId,
+      facetId,
       facetValue: selection.value,
     };
 
