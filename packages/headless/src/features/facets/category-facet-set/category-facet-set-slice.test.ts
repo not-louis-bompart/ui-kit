@@ -135,6 +135,7 @@ describe('category facet slice', () => {
         const parent = buildMockCategoryFacetValueRequest({
           value: 'A',
           state: 'selected',
+          retrieveChildren: true,
         });
         state[facetId] = buildMockCategoryFacetRequest({
           currentValues: [parent],
@@ -165,6 +166,13 @@ describe('category facet slice', () => {
           const finalState = categoryFacetSetReducer(state, action);
           expect(finalState[facetId].currentValues[0].state).toBe('idle');
         });
+
+        it('sets the parent retrieveChildren to false', () => {
+          const finalState = categoryFacetSetReducer(state, action);
+          expect(finalState[facetId].currentValues[0].retrieveChildren).toBe(
+            false
+          );
+        });
       });
 
       describe('when the selected value path does not contain the parent', () => {
@@ -179,9 +187,16 @@ describe('category facet slice', () => {
           expect(finalState[facetId].currentValues[0].children).toEqual([]);
         });
 
-        it('does not set the parent state to idle', () => {
+        it('keeps the parent #state to selected', () => {
           const finalState = categoryFacetSetReducer(state, action);
           expect(finalState[facetId].currentValues[0].state).toBe('selected');
+        });
+
+        it('keeps the parent #retrieveChildren to true', () => {
+          const finalState = categoryFacetSetReducer(state, action);
+          expect(finalState[facetId].currentValues[0].retrieveChildren).toBe(
+            true
+          );
         });
       });
     });
@@ -220,15 +235,33 @@ describe('category facet slice', () => {
         ).toEqual([expected]);
       });
 
-      it('when selecting a parent value, it clears the children array of that parent', () => {
+      describe('when selecting a parent value', () => {
         const selection = buildMockCategoryFacetValue({
           value: 'A',
           path: ['A'],
         });
         const action = toggleSelectCategoryFacetValue({facetId, selection});
-        const finalState = categoryFacetSetReducer(state, action);
 
-        expect(finalState[facetId].currentValues[0].children).toEqual([]);
+        it('clears the children array of that parent', () => {
+          const finalState = categoryFacetSetReducer(state, action);
+          const parent = finalState[facetId].currentValues[0];
+
+          expect(parent.children).toEqual([]);
+        });
+
+        it('sets parent #retrieveChildren to true', () => {
+          const finalState = categoryFacetSetReducer(state, action);
+          const parent = finalState[facetId].currentValues[0];
+
+          expect(parent.retrieveChildren).toBe(true);
+        });
+
+        it('sets parent #state to selected', () => {
+          const finalState = categoryFacetSetReducer(state, action);
+          const parent = finalState[facetId].currentValues[0];
+
+          expect(parent.state).toBe('selected');
+        });
       });
     });
   });

@@ -51,12 +51,17 @@ export const categoryFacetSetReducer = createReducer(
             return;
           }
 
+          parent.retrieveChildren = false;
           parent.state = 'idle';
           activeLevel = parent.children;
         }
 
         if (activeLevel.length) {
-          activeLevel[0].children = [];
+          const parentSelection = activeLevel[0];
+
+          parentSelection.retrieveChildren = true;
+          parentSelection.state = 'selected';
+          parentSelection.children = [];
           return;
         }
 
