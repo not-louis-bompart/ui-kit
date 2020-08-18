@@ -5,6 +5,7 @@ import {
   updateFacetSearch,
   executeFacetSearch,
   selectFacetSearchResult,
+  incrementPagingFacetSearch,
 } from '../../../features/facets/facet-search-set/facet-search-actions';
 import {FacetSearchResult} from '../../../api/search/facet-search/facet-search-response';
 import {executeSearch} from '../../../features/search/search-actions';
@@ -30,6 +31,18 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
       const query = `*${text}*`;
       dispatch(updateFacetSearch({facetId, query}));
     },
+    showMoreResults() {
+      dispatch(incrementPagingFacetSearch({facetId, pageIncrement: 1}));
+    },
+    showLessResults() {
+      dispatch(incrementPagingFacetSearch({facetId, pageIncrement: -1}));
+    },
+    resetResults() {
+      dispatch(updateFacetSearch({facetId, currentPage: 1}));
+    },
+    setPageSize(pageSize: number) {
+      dispatch(updateFacetSearch({facetId, pageSize}));
+    },
     /** Executes a facet search to update the values.*/
     search() {
       dispatch(executeFacetSearch(facetId));
@@ -43,7 +56,11 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
     },
     get state() {
       const facetSearch = engine.state.facetSearchSet[facetId];
-      return {...facetSearch.response};
+      return {
+        ...facetSearch.response,
+        currentPage: facetSearch.options.currentPage,
+        pageSize: facetSearch.options.pageSize,
+      };
     },
   };
 }

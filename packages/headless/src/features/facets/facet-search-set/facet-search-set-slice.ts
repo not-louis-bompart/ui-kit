@@ -3,6 +3,7 @@ import {
   registerFacetSearch,
   updateFacetSearch,
   executeFacetSearch,
+  incrementPagingFacetSearch,
 } from './facet-search-actions';
 import {FacetSearchRequestOptions} from './facet-search-request-options';
 import {FacetSearchResponse} from '../../../api/search/facet-search/facet-search-response';
@@ -43,6 +44,16 @@ export const facetSearchSetReducer = createReducer(
 
         search.options = {...search.options, ...rest};
       })
+      .addCase(incrementPagingFacetSearch, (state, action) => {
+        const {facetId, pageIncrement} = action.payload;
+        const search = state[facetId];
+
+        if (!search) {
+          return;
+        }
+
+        search.options.currentPage += pageIncrement;
+      })
       .addCase(executeFacetSearch.fulfilled, (state, action) => {
         const {facetId, response} = action.payload;
         const search = state[facetId];
@@ -71,7 +82,8 @@ export function buildFacetSearchOptions(
 ): FacetSearchRequestOptions {
   return {
     captions: {},
-    numberOfValues: 10,
+    currentPage: 1,
+    pageSize: 10,
     query: '',
     ...config,
   };

@@ -131,6 +131,46 @@ export class AtomicFacet {
     );
   }
 
+  private get showMoreSearchValues() {
+    const facetSearch = this.facet.facetSearch;
+    if (!facetSearch.state.moreValuesAvailable) {
+      return null;
+    }
+
+    return (
+      <button
+        onClick={() => {
+          // @ts-ignore
+          facetSearch.showMoreResults();
+          facetSearch.search();
+        }}
+      >
+        show more
+      </button>
+    );
+  }
+
+  private get resetSearchValues() {
+    const facetSearch = this.facet.facetSearch;
+    console.log(facetSearch);
+    //@ts-ignore
+    if (facetSearch.state.currentPage <= 1) {
+      return null;
+    }
+
+    return (
+      <button
+        onClick={() => {
+          // @ts-ignore
+          facetSearch.resetResults();
+          facetSearch.search();
+        }}
+      >
+        reset
+      </button>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -142,6 +182,10 @@ export class AtomicFacet {
         <div>
           {this.facetSearchInput}
           {this.facetSearchResults}
+          <div>
+            {this.showMoreSearchValues}
+            {this.resetSearchValues}
+          </div>
         </div>
         <div>{this.values}</div>
         <div>
