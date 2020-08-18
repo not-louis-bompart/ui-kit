@@ -52,7 +52,10 @@ export const facetSearchSetReducer = createReducer(
           return;
         }
 
-        search.options.currentPage += pageIncrement;
+        search.options.currentPage = Math.max(
+          1,
+          search.options.currentPage + pageIncrement
+        );
       })
       .addCase(executeFacetSearch.fulfilled, (state, action) => {
         const {facetId, response} = action.payload;

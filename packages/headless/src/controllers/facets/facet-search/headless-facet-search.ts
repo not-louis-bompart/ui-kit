@@ -31,15 +31,28 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
       const query = `*${text}*`;
       dispatch(updateFacetSearch({facetId, query}));
     },
+    /**
+     * Increases number of results returned by facet search by pageSize
+     */
     showMoreResults() {
       dispatch(incrementPagingFacetSearch({facetId, pageIncrement: 1}));
     },
+    /**
+     * Decreases number of results returned by facet search by pageSize
+     */
     showLessResults() {
       dispatch(incrementPagingFacetSearch({facetId, pageIncrement: -1}));
     },
+    /**
+     * Resets number of results returned by facet search to pageSize
+     */
     resetResults() {
       dispatch(updateFacetSearch({facetId, currentPage: 1}));
     },
+    /**
+     * Update the facet search page size
+     * @param pageSize number of results to be returned per page
+     */
     setPageSize(pageSize: number) {
       dispatch(updateFacetSearch({facetId, pageSize}));
     },

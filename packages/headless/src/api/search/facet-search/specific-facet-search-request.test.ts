@@ -29,9 +29,10 @@ describe('facetSearchRequest', () => {
     expect(buildParms().captions).toEqual(captions);
   });
 
-  it('retrieves the #numberOfValues from the facetSearchSet', () => {
+  it('computes the #numberOfValues from the facetSearchSet', () => {
     const numberOfValues = 5;
-    state.facetSearchSet[id].options.numberOfValues = numberOfValues;
+    state.facetSearchSet[id].options.pageSize = numberOfValues;
+    state.facetSearchSet[id].options.currentPage = 1;
 
     expect(buildParms().numberOfValues).toEqual(numberOfValues);
   });
