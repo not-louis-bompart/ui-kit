@@ -29,7 +29,7 @@ describe('facetSearchRequest', () => {
     expect(buildParms().captions).toEqual(captions);
   });
 
-  it('computes the #numberOfValues from the facetSearchSet', () => {
+  it('retrieves the #numberOfValues from the facetSearchSet', () => {
     const numberOfValues = 5;
     state.facetSearchSet[id].options.numberOfValues = numberOfValues;
 
