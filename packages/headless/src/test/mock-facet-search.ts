@@ -7,6 +7,7 @@ export function buildMockFacetSearch(
   return {
     options: {
       captions: {},
+      pageSize: 5,
       numberOfValues: 5,
       query: '',
     },
