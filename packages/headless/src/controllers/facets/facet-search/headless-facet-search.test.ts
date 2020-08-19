@@ -10,6 +10,7 @@ import {
   executeFacetSearch,
   selectFacetSearchResult,
   incrementFacetSearchNumberOfResults,
+  resetFacetSearchNuberOfResults,
 } from '../../../features/facets/facet-search-set/facet-search-actions';
 import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
 import {buildFacetSearchState} from '../../../features/facets/facet-search-set/facet-search-set-slice';
@@ -54,7 +55,17 @@ describe('FacetSearch', () => {
     expect(engine.actions).toContainEqual(action);
   });
 
-  it('#showMoreResults, dispatches #incrementPagingFacetSearch action with the specified options', () => {
+  it('#updateText dispatches #resetFacetSearchNuberOfResults', () => {
+    const text = 'apple';
+    controller.updateText(text);
+
+    const facetId = getFacetId();
+    const action = resetFacetSearchNuberOfResults({facetId});
+
+    expect(engine.actions).toContainEqual(action);
+  });
+
+  it('#showMoreResults, dispatches #incrementFacetSearchNumberOfResults', () => {
     controller.showMoreResults();
 
     const facetId = getFacetId();
@@ -63,6 +74,15 @@ describe('FacetSearch', () => {
     });
 
     expect(engine.actions).toContainEqual(action);
+  });
+
+  it('#showMoreresults dispatches #executeFacetSearch', () => {
+    controller.showMoreResults();
+
+    const action = engine.actions.find(
+      (a) => a.type === executeFacetSearch.pending.type
+    );
+    expect(action).toBeTruthy();
   });
 
   it('#search dispatches #executeFacetSearch action', () => {

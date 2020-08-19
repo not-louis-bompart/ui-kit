@@ -141,28 +141,9 @@ export class AtomicFacet {
       <button
         onClick={() => {
           facetSearch.showMoreResults();
-          facetSearch.search();
         }}
       >
         show more
-      </button>
-    );
-  }
-
-  private get resetSearchValues() {
-    const facetSearch = this.facet.facetSearch;
-    if (facetSearch.state.currentPage <= 1) {
-      return null;
-    }
-
-    return (
-      <button
-        onClick={() => {
-          facetSearch.resetResults();
-          facetSearch.search();
-        }}
-      >
-        reset
       </button>
     );
   }
@@ -178,10 +159,7 @@ export class AtomicFacet {
         <div>
           {this.facetSearchInput}
           {this.facetSearchResults}
-          <div>
-            {this.showMoreSearchValues}
-            {this.resetSearchValues}
-          </div>
+          {this.showMoreSearchValues}
         </div>
         <div>{this.values}</div>
         <div>
