@@ -37,7 +37,7 @@ describe('FacetSearch slice', () => {
     expect(finalState[facetId].options).toEqual({
       facetId,
       captions: {},
-      currentPage: 1,
+      numberOfValues: 10,
       pageSize: 10,
       query: '',
     });

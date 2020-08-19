@@ -5,7 +5,8 @@ import {
   updateFacetSearch,
   executeFacetSearch,
   selectFacetSearchResult,
-  incrementPagingFacetSearch,
+  incrementFacetSearchNumberOfResults,
+  resetFacetSearchNuberOfResults,
 } from '../../../features/facets/facet-search-set/facet-search-actions';
 import {FacetSearchResult} from '../../../api/search/facet-search/facet-search-response';
 import {executeSearch} from '../../../features/search/search-actions';
@@ -30,31 +31,14 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
     updateText(text: string) {
       const query = `*${text}*`;
       dispatch(updateFacetSearch({facetId, query}));
+      dispatch(resetFacetSearchNuberOfResults({facetId}));
     },
     /**
      * Increases number of results returned by facet search by pageSize
      */
     showMoreResults() {
-      dispatch(incrementPagingFacetSearch({facetId, pageIncrement: 1}));
-    },
-    /**
-     * Decreases number of results returned by facet search by pageSize
-     */
-    showLessResults() {
-      dispatch(incrementPagingFacetSearch({facetId, pageIncrement: -1}));
-    },
-    /**
-     * Resets number of results returned by facet search to pageSize
-     */
-    resetResults() {
-      dispatch(updateFacetSearch({facetId, currentPage: 1}));
-    },
-    /**
-     * Update the facet search page size
-     * @param pageSize number of results to be returned per page
-     */
-    setPageSize(pageSize: number) {
-      dispatch(updateFacetSearch({facetId, pageSize}));
+      dispatch(incrementFacetSearchNumberOfResults({facetId}));
+      dispatch(executeFacetSearch(facetId));
     },
     /** Executes a facet search to update the values.*/
     search() {
@@ -71,8 +55,6 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
       const facetSearch = engine.state.facetSearchSet[facetId];
       return {
         ...facetSearch.response,
-        currentPage: facetSearch.options.currentPage,
-        pageSize: facetSearch.options.pageSize,
       };
     },
   };

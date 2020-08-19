@@ -9,7 +9,7 @@ import {
   updateFacetSearch,
   executeFacetSearch,
   selectFacetSearchResult,
-  incrementPagingFacetSearch,
+  incrementFacetSearchNumberOfResults,
 } from '../../../features/facets/facet-search-set/facet-search-actions';
 import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
 import {buildFacetSearchState} from '../../../features/facets/facet-search-set/facet-search-set-slice';
@@ -55,50 +55,11 @@ describe('FacetSearch', () => {
   });
 
   it('#showMoreResults, dispatches #incrementPagingFacetSearch action with the specified options', () => {
-    const pageIncrement = 1;
     controller.showMoreResults();
 
     const facetId = getFacetId();
-    const action = incrementPagingFacetSearch({
+    const action = incrementFacetSearchNumberOfResults({
       facetId,
-      pageIncrement,
-    });
-
-    expect(engine.actions).toContainEqual(action);
-  });
-
-  it('#showLessResults, dispatches #incrementPagingFacetSearch action with the specified options', () => {
-    const pageIncrement = -1;
-    controller.showLessResults();
-
-    const facetId = getFacetId();
-    const action = incrementPagingFacetSearch({
-      facetId,
-      pageIncrement,
-    });
-
-    expect(engine.actions).toContainEqual(action);
-  });
-
-  it('#resetResults, dispatches #updateFacetSearch action with the specified options', () => {
-    const currentPage = 1;
-    controller.resetResults();
-    const facetId = getFacetId();
-    const action = updateFacetSearch({
-      facetId,
-      currentPage,
-    });
-
-    expect(engine.actions).toContainEqual(action);
-  });
-
-  it('#setPageSize, dispatches #updateFacetSearch action with the specified options', () => {
-    const pageSize = 7;
-    controller.setPageSize(pageSize);
-    const facetId = getFacetId();
-    const action = updateFacetSearch({
-      facetId,
-      pageSize,
     });
 
     expect(engine.actions).toContainEqual(action);
@@ -135,8 +96,6 @@ describe('FacetSearch', () => {
     const facetId = getFacetId();
     const response = {
       ...buildMockFacetSearchResponse(),
-      pageSize: 10,
-      currentPage: 1,
     };
 
     engine.state.facetSearchSet[facetId] = buildFacetSearchState({response});

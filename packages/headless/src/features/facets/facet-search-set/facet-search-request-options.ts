@@ -2,5 +2,4 @@ import {SpecificFacetSearchRequest} from '../../../api/search/facet-search/speci
 
 export type FacetSearchRequestOptions = {
   pageSize: number;
-  currentPage: number;
-} & Pick<SpecificFacetSearchRequest, 'captions' | 'query'>;
+} & Pick<SpecificFacetSearchRequest, 'captions' | 'numberOfValues' | 'query'>;

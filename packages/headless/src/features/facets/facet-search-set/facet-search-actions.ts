@@ -9,11 +9,6 @@ export type FacetSearchOptions = {facetId: string} & Partial<
   FacetSearchRequestOptions
 >;
 
-export type FacetPagingOptions = {
-  facetId: string;
-  pageIncrement: number;
-};
-
 type selectFacetSearchResultPayload = {
   facetId: string;
   value: FacetSearchResult;
@@ -36,11 +31,15 @@ export const updateFacetSearch = createAction<FacetSearchOptions>(
 );
 
 /**
- * Increments the page count for facet search by the pageIncrmenet provided in the paging options param.
- * @param {FacetPagingOptions} FacetPagingOptions The options to update the facet search's page with.
+ * Increments the amount of results returned by facet search by configured page size.
+ * @param {FacetSearchOptions} FacetSearchOptions The options to register the facet search with.
  */
-export const incrementPagingFacetSearch = createAction<FacetPagingOptions>(
-  'facetSearch/incrementPaging'
+export const incrementFacetSearchNumberOfResults = createAction<
+  FacetSearchOptions
+>('facetSearch/incrementResults');
+
+export const resetFacetSearchNuberOfResults = createAction<FacetSearchOptions>(
+  'facetSearch/resetResults'
 );
 
 /**

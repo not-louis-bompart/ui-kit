@@ -31,8 +31,7 @@ describe('facetSearchRequest', () => {
 
   it('computes the #numberOfValues from the facetSearchSet', () => {
     const numberOfValues = 5;
-    state.facetSearchSet[id].options.pageSize = numberOfValues;
-    state.facetSearchSet[id].options.currentPage = 1;
+    state.facetSearchSet[id].options.numberOfValues = numberOfValues;
 
     expect(buildParms().numberOfValues).toEqual(numberOfValues);
   });

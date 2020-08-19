@@ -119,9 +119,7 @@ describe('search api client', () => {
       requestParams: {
         type: 'specific',
         captions: facetSearchState.options.captions,
-        numberOfValues:
-          facetSearchState.options.pageSize *
-          facetSearchState.options.currentPage,
+        numberOfValues: facetSearchState.options.numberOfValues,
         query: facetSearchState.options.query,
         field: facetState.field,
         delimitingCharacter: facetState.delimitingCharacter,
