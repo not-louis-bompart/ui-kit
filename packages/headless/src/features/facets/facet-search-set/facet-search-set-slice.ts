@@ -2,8 +2,6 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   registerFacetSearch,
   updateFacetSearch,
-  incrementFacetSearchNumberOfResults,
-  resetFacetSearchNuberOfResults,
   executeFacetSearch,
 } from './facet-search-actions';
 import {FacetSearchRequestOptions} from './facet-search-request-options';
@@ -45,26 +43,6 @@ export const facetSearchSetReducer = createReducer(
 
         search.options = {...search.options, ...rest};
       })
-      .addCase(incrementFacetSearchNumberOfResults, (state, action) => {
-        const {facetId} = action.payload;
-        const search = state[facetId];
-
-        if (!search) {
-          return;
-        }
-
-        search.options.numberOfValues += search.options.pageSize;
-      })
-      .addCase(resetFacetSearchNuberOfResults, (state, action) => {
-        const {facetId} = action.payload;
-        const search = state[facetId];
-
-        if (!search) {
-          return;
-        }
-
-        search.options.numberOfValues = search.options.pageSize;
-      })
       .addCase(executeFacetSearch.fulfilled, (state, action) => {
         const {facetId, response} = action.payload;
         const search = state[facetId];
@@ -94,7 +72,6 @@ export function buildFacetSearchOptions(
   return {
     captions: {},
     numberOfValues: 10,
-    pageSize: 10,
     query: '',
     ...config,
   };

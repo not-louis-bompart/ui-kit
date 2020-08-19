@@ -31,18 +31,6 @@ export const updateFacetSearch = createAction<FacetSearchOptions>(
 );
 
 /**
- * Increments the amount of results returned by facet search by configured page size.
- * @param {FacetSearchOptions} FacetSearchOptions The options to register the facet search with.
- */
-export const incrementFacetSearchNumberOfResults = createAction<
-  FacetSearchOptions
->('facetSearch/incrementResults');
-
-export const resetFacetSearchNuberOfResults = createAction<FacetSearchOptions>(
-  'facetSearch/resetResults'
-);
-
-/**
  * Executes a facet search.
  * @param {string} facetId The facet id on which to execute the search.
  */

@@ -5,8 +5,6 @@ import {
   updateFacetSearch,
   executeFacetSearch,
   selectFacetSearchResult,
-  incrementFacetSearchNumberOfResults,
-  resetFacetSearchNuberOfResults,
 } from '../../../features/facets/facet-search-set/facet-search-actions';
 import {FacetSearchResult} from '../../../api/search/facet-search/facet-search-response';
 import {executeSearch} from '../../../features/search/search-actions';
@@ -24,20 +22,35 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
 
   dispatch(registerFacetSearch(props.options));
 
+  const getFacetSearch = () => {
+    return engine.state.facetSearchSet[facetId];
+  };
+
   return {
     /** Updates the facet search query.
      * @param text The new query.
      */
     updateText(text: string) {
+      const {numberOfValues: pageSize} = props.options;
+      const initialNumber = pageSize || 10; // hard coded default value of 10
+
       const query = `*${text}*`;
-      dispatch(updateFacetSearch({facetId, query}));
-      dispatch(resetFacetSearchNuberOfResults({facetId}));
+      dispatch(
+        updateFacetSearch({facetId, query, numberOfValues: initialNumber})
+      );
     },
     /**
-     * Increases number of results returned by facet search by pageSize
+     * Increases number of results returned by numberOfResults
      */
     showMoreResults() {
-      dispatch(incrementFacetSearchNumberOfResults({facetId}));
+      const {numberOfValues: pageSize} = props.options;
+      const {numberOfValues} = getFacetSearch().options;
+
+      const increment = pageSize || 10; // hard coded default value of 10
+
+      dispatch(
+        updateFacetSearch({facetId, numberOfValues: numberOfValues + increment})
+      );
       dispatch(executeFacetSearch(facetId));
     },
     /** Executes a facet search to update the values.*/
@@ -52,7 +65,7 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
       );
     },
     get state() {
-      const facetSearch = engine.state.facetSearchSet[facetId];
+      const facetSearch = getFacetSearch();
       return {
         ...facetSearch.response,
       };

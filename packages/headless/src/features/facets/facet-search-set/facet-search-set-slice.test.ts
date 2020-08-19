@@ -38,7 +38,6 @@ describe('FacetSearch slice', () => {
       facetId,
       captions: {},
       numberOfValues: 10,
-      pageSize: 10,
       query: '',
     });
   });
@@ -47,7 +46,7 @@ describe('FacetSearch slice', () => {
     const facetId = '1';
     state[facetId] = buildFacetSearchState();
 
-    const options = buildFacetSearchOptions({pageSize: 5});
+    const options = buildFacetSearchOptions({numberOfValues: 5});
     const finalState = facetSearchSetReducer(
       state,
       registerFacetSearch({facetId, ...options})
