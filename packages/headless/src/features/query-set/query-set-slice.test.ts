@@ -3,14 +3,13 @@ import {
   QuerySetState,
   getQuerySetInitialState,
 } from './query-set-slice';
-import {
-  registerQuerySetQuery,
-  updateQuerySetQuery,
-  updateQuerySetAllQueries,
-} from './query-set-actions';
+import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
+import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {getHistoryEmptyState} from '../history/history-slice';
 import {change} from '../history/history-actions';
+import {executeSearch} from '../search/search-actions';
+import {buildMockSearch} from '../../test/mock-search';
 
 describe('querySet slice', () => {
   let state: QuerySetState;
@@ -92,13 +91,16 @@ describe('querySet slice', () => {
     expect(finalState[id]).toBe(undefined);
   });
 
-  it('allows setting all queries to a common value', () => {
+  it('sets all queries to queryExecuted on executeSearch.fulfilled', () => {
     registerEmptyQueryWithId('foo');
     registerEmptyQueryWithId('bar');
 
     const expectedQuerySet = {foo: 'world', bar: 'world'};
-
-    const nextState = querySetReducer(state, updateQuerySetAllQueries('world'));
+    const searchState = buildMockSearch({queryExecuted: 'world'});
+    const nextState = querySetReducer(
+      state,
+      executeSearch.fulfilled(searchState, '', logSearchboxSubmit())
+    );
     expect(nextState).toEqual(expectedQuerySet);
   });
 

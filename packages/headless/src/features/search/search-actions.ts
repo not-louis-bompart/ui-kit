@@ -9,7 +9,6 @@ import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {snapshot} from '../history/history-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
 import {didYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {updateQuerySetAllQueries} from '../query-set/query-set-actions';
 import {updateQuery} from '../query/query-actions';
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 
@@ -55,7 +54,6 @@ export const executeSearch = createAsyncThunk<
       !shouldReExecuteTheQueryWithCorrections(state, fetched.response.success)
     ) {
       dispatch(snapshot(extractHistory(state)));
-      dispatch(updateQuerySetAllQueries(fetched.queryExecuted));
       return {
         ...fetched,
         response: fetched.response.success,
@@ -75,7 +73,6 @@ export const executeSearch = createAsyncThunk<
     if (isErrorResponse(retried.response)) {
       return rejectWithValue(retried.response.error);
     }
-    dispatch(updateQuerySetAllQueries(retried.queryExecuted));
     return {
       ...retried,
       response: retried.response.success,
