@@ -26,20 +26,55 @@ describe('FacetSearch slice', () => {
     expect(finalState).toEqual({});
   });
 
-  it('registers a facet search with the passed id and options', () => {
+  describe('registration', () => {
     const facetId = '1';
     const options: FacetSearchOptions = {facetId};
 
-    const finalState = facetSearchSetReducer(
-      state,
-      registerFacetSearch(options)
-    );
-    expect(finalState[facetId].options).toEqual({
-      facetId,
-      captions: {},
-      numberOfValues: 10,
-      query: '',
+    it('registers a facet search with the passed id and options', () => {
+      const finalState = facetSearchSetReducer(
+        state,
+        registerFacetSearch(options)
+      );
+      expect(finalState[facetId].options).toEqual({
+        facetId,
+        captions: {},
+        numberOfValues: 10,
+        query: '',
+      });
     });
+
+    it('the initial isloading state is set to false', () => {
+      const finalState = facetSearchSetReducer(
+        state,
+        registerFacetSearch(options)
+      );
+      expect(finalState[facetId].isLoading).toBe(false);
+    });
+  });
+
+  it('sets the isloading state to true during executeSearch.pending', () => {
+    const facetId = '1';
+    state[facetId] = buildFacetSearchState();
+
+    const pendingAction = executeFacetSearch.pending('1', '1');
+    const finalState = facetSearchSetReducer(state, pendingAction);
+    expect(finalState[facetId].isLoading).toBe(true);
+  });
+
+  it('sets the isloading state to false during executeSearch.fulfilled', () => {
+    const facetId = '1';
+    state[facetId] = buildFacetSearchState();
+
+    const pendingAction = executeFacetSearch.fulfilled(
+      {
+        facetId: '1',
+        response: buildMockFacetSearchResponse(),
+      },
+      '1',
+      '1'
+    );
+    const finalState = facetSearchSetReducer(state, pendingAction);
+    expect(finalState[facetId].isLoading).toBe(false);
   });
 
   it('registering a facet search with an id that already exists does not overwrite the existing facet', () => {
