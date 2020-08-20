@@ -58,23 +58,30 @@ describe('FacetSearch', () => {
     expect(engine.actions).toContainEqual(action);
   });
 
-  it('#showMoreResults, dispatches #updateFacetSearch and #executeFacetSearch', () => {
-    const facetId = getFacetId();
-    engine.state.facetSearchSet[facetId] = buildMockFacetSearch();
-
-    controller.showMoreResults();
-
-    const incrementAction = updateFacetSearch({
-      facetId,
-      numberOfValues: 20,
+  describe('#showMoreResults', () => {
+    beforeEach(() => {
+      const facetId = getFacetId();
+      engine.state.facetSearchSet[facetId] = buildMockFacetSearch();
+      controller.showMoreResults();
     });
 
-    const executeAction = engine.actions.find(
-      (a) => a.type === executeFacetSearch.pending.type
-    );
+    it('#showMoreResults dispatches #updateFacetSearch', () => {
+      const facetId = getFacetId();
+      const incrementAction = updateFacetSearch({
+        facetId,
+        numberOfValues: 15,
+      });
 
-    expect(incrementAction).toBeTruthy();
-    expect(engine.actions).toContainEqual(executeAction);
+      expect(engine.actions).toContainEqual(incrementAction);
+    });
+
+    it('#showMoreResults dispatches #executeFacetSearch', () => {
+      const executeAction = engine.actions.find(
+        (a) => a.type === executeFacetSearch.pending.type
+      );
+
+      expect(engine.actions).toContainEqual(executeAction);
+    });
   });
 
   it('#search dispatches #executeFacetSearch action', () => {
@@ -106,9 +113,7 @@ describe('FacetSearch', () => {
 
   it('calling #state returns the response', () => {
     const facetId = getFacetId();
-    const response = {
-      ...buildMockFacetSearchResponse(),
-    };
+    const response = buildMockFacetSearchResponse();
 
     engine.state.facetSearchSet[facetId] = buildFacetSearchState({response});
     expect(controller.state).toEqual(response);

@@ -19,6 +19,7 @@ export type FacetSearch = ReturnType<typeof buildFacetSearch>;
 export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
   const dispatch = engine.dispatch;
   const facetId = props.options.facetId;
+  const initialNumberOfValues = props.options.numberOfValues || 10;
 
   dispatch(registerFacetSearch(props.options));
 
@@ -31,25 +32,25 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
      * @param text The new query.
      */
     updateText(text: string) {
-      const {numberOfValues: pageSize} = props.options;
-      const initialNumber = pageSize || 10; // hard coded default value of 10
-
       const query = `*${text}*`;
       dispatch(
-        updateFacetSearch({facetId, query, numberOfValues: initialNumber})
+        updateFacetSearch({
+          facetId,
+          query,
+          numberOfValues: initialNumberOfValues,
+        })
       );
     },
     /**
      * Increases number of results returned by numberOfResults
      */
     showMoreResults() {
-      const {numberOfValues: pageSize} = props.options;
       const {numberOfValues} = getFacetSearch().options;
-
-      const increment = pageSize || 10; // hard coded default value of 10
-
       dispatch(
-        updateFacetSearch({facetId, numberOfValues: numberOfValues + increment})
+        updateFacetSearch({
+          facetId,
+          numberOfValues: numberOfValues + initialNumberOfValues,
+        })
       );
       dispatch(executeFacetSearch(facetId));
     },
