@@ -3,7 +3,11 @@ import {
   QuerySetState,
   getQuerySetInitialState,
 } from './query-set-slice';
-import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
+import {
+  registerQuerySetQuery,
+  updateQuerySetQuery,
+  updateQuerySetAllQueries,
+} from './query-set-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
 import {getHistoryEmptyState} from '../history/history-slice';
 import {change} from '../history/history-actions';
@@ -86,6 +90,16 @@ describe('querySet slice', () => {
     const finalState = querySetReducer(state, action);
 
     expect(finalState[id]).toBe(undefined);
+  });
+
+  it('allows setting all queries to a common value', () => {
+    registerEmptyQueryWithId('foo');
+    registerEmptyQueryWithId('bar');
+
+    const expectedQuerySet = {foo: 'world', bar: 'world'};
+
+    const nextState = querySetReducer(state, updateQuerySetAllQueries('world'));
+    expect(nextState).toEqual(expectedQuerySet);
   });
 
   it('allows to restore a query set on history change', () => {

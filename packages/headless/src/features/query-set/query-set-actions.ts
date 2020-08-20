@@ -27,3 +27,7 @@ export const updateQuerySetQuery = createAction(
   (payload: {id: string; query: string}) =>
     validatePayloadSchema(payload, querySetDefinition)
 );
+
+export const updateQuerySetAllQueries = createAction<string>(
+  'querySet/updateAll'
+);
