@@ -73,6 +73,7 @@ export const executeSearch = createAsyncThunk<
     if (isErrorResponse(retried.response)) {
       return rejectWithValue(retried.response.error);
     }
+
     return {
       ...retried,
       response: retried.response.success,
