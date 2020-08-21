@@ -65,7 +65,7 @@ describe('FacetSearch slice', () => {
     const facetId = '1';
     state[facetId] = buildFacetSearchState();
 
-    const pendingAction = executeFacetSearch.fulfilled(
+    const fulfiledAction = executeFacetSearch.fulfilled(
       {
         facetId: '1',
         response: buildMockFacetSearchResponse(),
@@ -73,7 +73,7 @@ describe('FacetSearch slice', () => {
       '1',
       '1'
     );
-    const finalState = facetSearchSetReducer(state, pendingAction);
+    const finalState = facetSearchSetReducer(state, fulfiledAction);
     expect(finalState[facetId].isLoading).toBe(false);
   });
 
@@ -81,12 +81,12 @@ describe('FacetSearch slice', () => {
     const facetId = '1';
     state[facetId] = buildFacetSearchState();
 
-    const pendingAction = executeFacetSearch.rejected(
+    const rejectedAction = executeFacetSearch.rejected(
       {name: 'test', message: 'test'},
       '1',
       '1'
     );
-    const finalState = facetSearchSetReducer(state, pendingAction);
+    const finalState = facetSearchSetReducer(state, rejectedAction);
     expect(finalState[facetId].isLoading).toBe(false);
   });
 
