@@ -77,6 +77,19 @@ describe('FacetSearch slice', () => {
     expect(finalState[facetId].isLoading).toBe(false);
   });
 
+  it('sets the isloading state to false during executeSearch.rejected', () => {
+    const facetId = '1';
+    state[facetId] = buildFacetSearchState();
+
+    const pendingAction = executeFacetSearch.rejected(
+      {name: 'test', message: 'test'},
+      '1',
+      '1'
+    );
+    const finalState = facetSearchSetReducer(state, pendingAction);
+    expect(finalState[facetId].isLoading).toBe(false);
+  });
+
   it('registering a facet search with an id that already exists does not overwrite the existing facet', () => {
     const facetId = '1';
     state[facetId] = buildFacetSearchState();
