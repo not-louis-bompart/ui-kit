@@ -19,6 +19,9 @@ export const toggleSelectCategoryFacetValue = createAction<{
   selection: CategoryFacetValue;
 }>('categoryFacet/toggleSelectValue');
 
+/**
+ * Updates the the sort criterion for the category facet
+ */
 export const updateCategoryFacetSortCriterion = createAction<{
   facetId: string;
   criterion: CategoryFacetSortCriterion;

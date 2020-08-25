@@ -5,6 +5,7 @@ import {CategoryFacetRegistrationOptions} from '../../../features/facets/categor
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
+  updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {facetSelector} from '../../../features/facets/facet-set/facet-set-selectors';
 import {
@@ -17,6 +18,8 @@ import {
   logFacetDeselect,
   logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
+import {categoryFacetRequestSelector} from '../../../features/facets/category-facet-set/category-facet-set-selector';
 
 export type CategoryFacetProps = {
   options: CategoryFacetOptions;
@@ -63,14 +66,24 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       dispatch(executeSearch(analyticsAction));
     },
 
+    /** Sorts the category facet values according to the passed criterion.
+     * @param {CategoryFacetSortCriterion} criterion The criterion to sort values by.
+     */
+    sortBy(criterion: CategoryFacetSortCriterion) {
+      const facetId = options.facetId;
+
+      dispatch(updateCategoryFacetSortCriterion({facetId, criterion}));
+    },
+
     /**  @returns The state of the `CategoryFacet` controller.*/
     get state() {
+      const request = categoryFacetRequestSelector(engine.state, facetId);
       const response = facetSelector(engine.state, facetId) as
         | CategoryFacetResponse
         | undefined;
 
       const {parents, values} = partitionIntoParentsAndValues(response);
-      return {parents, values};
+      return {parents, values, sortCriteria: request.sortCriteria};
     },
   };
 }
