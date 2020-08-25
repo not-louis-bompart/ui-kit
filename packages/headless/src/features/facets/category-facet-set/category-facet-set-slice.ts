@@ -10,6 +10,7 @@ import {
 import {CategoryFacetRegistrationOptions} from './interfaces/options';
 import {change} from '../../history/history-actions';
 import {CategoryFacetValue} from './interfaces/response';
+import {updateCategoryFacetSortCriterion} from './category-facet-set-actions';
 
 export type CategoryFacetSetState = Record<string, CategoryFacetRequest>;
 
@@ -32,6 +33,16 @@ export const categoryFacetSetReducer = createReducer(
         state[facetId] = buildCategoryFacetRequest(options);
       })
       .addCase(change.fulfilled, (_, action) => action.payload.categoryFacetSet)
+      .addCase(updateCategoryFacetSortCriterion, (state, action) => {
+        const {facetId, criterion} = action.payload;
+        const request = state[facetId];
+
+        if (!request) {
+          return;
+        }
+
+        request.sortCriteria = criterion;
+      })
       .addCase(toggleSelectCategoryFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         const request = state[facetId];

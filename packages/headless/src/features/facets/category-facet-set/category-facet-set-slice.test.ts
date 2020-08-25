@@ -7,12 +7,14 @@ import {CategoryFacetRegistrationOptions} from './interfaces/options';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
+  updateCategoryFacetSortCriterion,
 } from './category-facet-set-actions';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {getHistoryEmptyState} from '../../history/history-slice';
 import {change} from '../../history/history-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request';
+import {CategoryFacetSortCriterion} from './interfaces/request';
 
 describe('category facet slice', () => {
   const facetId = '1';
@@ -51,6 +53,16 @@ describe('category facet slice', () => {
       basePath: [],
       filterByBasePath: true,
     });
+  });
+
+  it('#updateCategoryFacetSortCriterion sets the correct sort criterion', () => {
+    const sortCriterion: CategoryFacetSortCriterion = 'alphanumeric';
+    state[facetId] = buildMockCategoryFacetRequest({facetId, field: 'a'});
+    const finalState = categoryFacetSetReducer(
+      state,
+      updateCategoryFacetSortCriterion({facetId, criterion: sortCriterion})
+    );
+    expect(finalState[facetId].sortCriteria).toBe(sortCriterion);
   });
 
   it('#registerCategoryFacet with a registered id does not overwrite a category facet', () => {
