@@ -5,10 +5,10 @@ describe('atomic-search-interface', () => {
   it('renders', async () => {
     const page = await newSpecPage({
       components: [AtomicSearchInterface],
-      html: '<atomic-search-interface></atomic-search-interface>',
+      html: '<atomic-search-interface sample></atomic-search-interface>',
     });
     expect(page.root).toEqualHtml(`
-      <atomic-search-interface>
+      <atomic-search-interface sample>
         <mock:shadow-root>
           <slot></slot>
         </mock:shadow-root>
