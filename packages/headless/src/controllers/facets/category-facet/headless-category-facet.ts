@@ -50,6 +50,16 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
     return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
   };
 
+  const getRequest = () => {
+    return categoryFacetRequestSelector(engine.state, facetId);
+  };
+
+  const getResponse = () => {
+    return facetSelector(engine.state, facetId) as
+      | CategoryFacetResponse
+      | undefined;
+  };
+
   dispatch(registerCategoryFacet(options));
 
   return {
@@ -75,12 +85,19 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       dispatch(updateCategoryFacetSortCriterion({facetId, criterion}));
     },
 
+    /**
+     * Returns `true` if the category facet values are sorted according to the passed criterion and `false` otherwise.
+     * @param {CategoryFacetSortCriterion} criterion The criterion to compare.
+     */
+    isSortedBy(criterion: CategoryFacetSortCriterion) {
+      const request = getRequest();
+      return request.sortCriteria === criterion;
+    },
+
     /**  @returns The state of the `CategoryFacet` controller.*/
     get state() {
-      const request = categoryFacetRequestSelector(engine.state, facetId);
-      const response = facetSelector(engine.state, facetId) as
-        | CategoryFacetResponse
-        | undefined;
+      const request = getRequest();
+      const response = getResponse();
 
       const {parents, values} = partitionIntoParentsAndValues(response);
       const isLoading = engine.state.search.isLoading;

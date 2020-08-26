@@ -138,4 +138,9 @@ describe('category facet', () => {
     });
     expect(engine.actions).toContainEqual(action);
   });
+
+  it('#isSortedBy returns correct value', () => {
+    expect(categoryFacet.isSortedBy('alphanumeric')).toBeFalsy();
+    expect(categoryFacet.isSortedBy('occurrences')).toBeTruthy();
+  });
 });
