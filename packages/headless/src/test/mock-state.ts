@@ -18,12 +18,14 @@ import {getPipelineInitialState} from '../features/pipeline/pipeline-slice';
 import {makeHistory} from '../app/undoable';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-slice';
 import {getCategoryFacetSetInitialState} from '../features/facets/category-facet-set/category-facet-set-slice';
+import {getInitialConstantQueryState} from '../features/constant-query/constant-query-slice';
 
 export function createMockState(
   config: Partial<SearchPageState> = {}
 ): SearchPageState {
   return {
     configuration: getConfigurationInitialState(),
+    constantQuery: getInitialConstantQueryState(),
     facetSet: getFacetSetInitialState(),
     dateFacetSet: getDateFacetSetInitialState(),
     numericFacetSet: getNumericFacetSetInitialState(),
