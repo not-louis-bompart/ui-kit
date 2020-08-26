@@ -50,6 +50,13 @@ export interface QueryState {
   q: string;
 }
 
+export interface ConstantQueryState {
+  /**
+   * The cq filter (e.g., `((q AND aq) OR dq) AND cq).
+   */
+  cq: string;
+}
+
 export interface RedirectionState {
   /**
    * The URL to redirect the user to.
