@@ -6,11 +6,11 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
+  updateCategoryFacetSortCriterion,
 } from './category-facet-set-actions';
 import {CategoryFacetRegistrationOptions} from './interfaces/options';
 import {change} from '../../history/history-actions';
 import {CategoryFacetValue} from './interfaces/response';
-import {updateCategoryFacetSortCriterion} from './category-facet-set-actions';
 
 export type CategoryFacetSetState = Record<string, CategoryFacetRequest>;
 

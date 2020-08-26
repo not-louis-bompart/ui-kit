@@ -1,14 +1,14 @@
 import fetch from 'cross-fetch';
-
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentTypes = 'application/json' | 'text/html';
 
 export interface PlatformClientCallOptions<RequestParams> {
   url: string;
-  accessToken: string;
   method: HttpMethods;
   contentType: HTTPContentTypes;
   requestParams: RequestParams;
+  accessToken: string;
+  renewAccessToken: () => Promise<string>;
 }
 
 export interface PlatformResponse<T> {
@@ -29,10 +29,17 @@ export class PlatformClient {
       body: JSON.stringify(options.requestParams),
     });
 
-    const body = (await response.json()) as ResponseType;
+    if (response.status === 419) {
+      const accessToken = await options.renewAccessToken();
+
+      if (accessToken !== '') {
+        return PlatformClient.call({...options, accessToken});
+      }
+    }
+
     return {
       response,
-      body,
+      body: (await response.json()) as ResponseType,
     };
   }
 }

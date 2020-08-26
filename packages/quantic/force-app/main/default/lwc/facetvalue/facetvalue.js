@@ -1,5 +1,5 @@
 // @ts-check
-import { LightningElement, api, track } from "lwc";
+import { LightningElement, api } from "lwc";
 
 export default class Facetvalue extends LightningElement {
   /** @type {import("coveo").FacetValue} */

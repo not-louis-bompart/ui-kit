@@ -50,9 +50,16 @@ export function buildNumericFacet(engine: Engine, props: NumericFacetProps) {
 
   const facetId = props.options.facetId || randomID('numericFacet');
   const options: NumericFacetRegistrationOptions = {facetId, ...props.options};
-  const rangeFacet = buildRangeFacet<NumericFacetResponse>(engine, facetId);
 
   dispatch(registerNumericFacet(options));
+
+  const rangeFacet = buildRangeFacet<NumericFacetRequest, NumericFacetResponse>(
+    engine,
+    {
+      facetId,
+      getRequest: () => engine.state.numericFacetSet[facetId],
+    }
+  );
 
   return {
     ...rangeFacet,
@@ -64,6 +71,8 @@ export function buildNumericFacet(engine: Engine, props: NumericFacetProps) {
       dispatch(toggleSelectNumericFacetValue({facetId, selection}));
       rangeFacet.toggleSelect(selection);
     },
+
+    /** @returns The state of the `NumericFacet` controller.*/
     get state() {
       return rangeFacet.state;
     },

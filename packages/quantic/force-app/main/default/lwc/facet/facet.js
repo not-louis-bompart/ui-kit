@@ -10,11 +10,11 @@ export default class Facet extends LightningElement {
   /** @type {string} */
   @api field;
   /** @type {string} */
-  @api title;
+  @api label;
 
-  /** @type {ReturnType<typeof import("coveo").buildFacet>} */
+  /** @type {import("coveo").Facet}} */
   facet;
-  /** @type {() => any} */
+  /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
   @api
@@ -52,25 +52,14 @@ export default class Facet extends LightningElement {
     if (!this.facet) {
       return false;
     }
-    return this.facet.canShowMoreValues && !this.facet.canShowLessValues;
+    return this.state.canShowMoreValues;
   }
 
   get canShowLess() {
     if (!this.facet) {
       return false;
     }
-    return this.facet.canShowLessValues && !this.facet.canShowMoreValues;
-  }
-
-  get canShowMoreAndLess() {
-    if (!this.facet) {
-      return false;
-    }
-    return this.facet.canShowLessValues && this.facet.canShowMoreValues;
-  }
-
-  get hasFooter() {
-    return this.canShowLess || this.canShowMore || this.canShowMoreAndLess;
+    return this.state.canShowLessValues;
   }
 
   get hasValues() {

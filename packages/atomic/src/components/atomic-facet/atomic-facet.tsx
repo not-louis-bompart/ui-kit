@@ -55,7 +55,7 @@ export class AtomicFacet {
   }
 
   private get resetButton() {
-    return this.facet.hasActiveValues ? (
+    return this.state.hasActiveValues ? (
       <button onClick={() => this.facet.deselectAll()}>X</button>
     ) : null;
   }
@@ -112,7 +112,7 @@ export class AtomicFacet {
   }
 
   private get showMoreButton() {
-    if (!this.facet.canShowMoreValues) {
+    if (!this.state.canShowMoreValues) {
       return null;
     }
 
@@ -122,12 +122,29 @@ export class AtomicFacet {
   }
 
   private get showLessButton() {
-    if (!this.facet.canShowLessValues) {
+    if (!this.state.canShowLessValues) {
       return null;
     }
 
     return (
       <button onClick={() => this.facet.showLessValues()}>show less</button>
+    );
+  }
+
+  private get showMoreSearchValues() {
+    const facetSearch = this.facet.facetSearch;
+    if (!facetSearch.state.moreValuesAvailable) {
+      return null;
+    }
+
+    return (
+      <button
+        onClick={() => {
+          facetSearch.showMoreResults();
+        }}
+      >
+        show more
+      </button>
     );
   }
 
@@ -142,6 +159,7 @@ export class AtomicFacet {
         <div>
           {this.facetSearchInput}
           {this.facetSearchResults}
+          {this.showMoreSearchValues}
         </div>
         <div>{this.values}</div>
         <div>

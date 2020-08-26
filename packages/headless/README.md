@@ -69,7 +69,7 @@ The base of the `/src` folder should only contain exports.
 
 `/api` contains everything regarding api calls.
 
-`/tests` contains test mocks.
+`/test` contains test mocks.
 
 ## Using the headless library
 
@@ -88,6 +88,10 @@ export const engine = new HeadlessEngine({
   configuration: {
     organizationId: 'your_organization',
     accessToken: 'your_access_token',
+    search: {
+      pipeline: 'your_query_pipeline',
+      searchHub: 'your_search_hub',
+    },
   },
   reducers: searchPageReducers,
 });
@@ -123,10 +127,10 @@ You can setup a new headless controller by instantiating its class. Every contro
 Instantiation of a `SearchBox` headless controller:
 
 ```typescript
-import {SearchBox} from '@coveo/headless';
+import {SearchBox, buildSearchBox} from '@coveo/headless';
 import {engine} from './engine';
 
-const searchBox = new SearchBox(engine);
+const searchBox: SearchBox = buildSearchBox(engine);
 ```
 
 ##### Controller options validation.
@@ -194,10 +198,10 @@ Actions can get complex, that's why the headless library offers action creators 
 Example:
 
 ```typescript
-import {configurationActions} from '@coveo/headless';
+import {ConfigurationActions} from '@coveo/headless';
 
 // Calling the following action creator:
-configurationActions.updateSearchConfiguration({
+ConfigurationActions.updateSearchConfiguration({
   endpoint: 'https://platform.cloud.coveo.com/',
 });
 
@@ -215,10 +219,10 @@ configurationActions.updateSearchConfiguration({
 To update the headless state, actions have to be dispatched using the **dispatch** method of the `HeadlessEngine` class instance.
 
 ```typescript
-import {configurationActions} from '@coveo/headless';
+import {ConfigurationActions} from '@coveo/headless';
 import {engine} from './engine';
 
-const action = configurationActions.updateSearchConfiguration({
+const action = ConfigurationActions.updateSearchConfiguration({
   endpoint: 'https://platform.cloud.coveo.com/',
 });
 
@@ -303,8 +307,7 @@ import {counterReducer} from './counter-reducer';
 
 export const engine = new HeadlessEngine({
   configuration: {
-    organizationId: 'your_organization',
-    accessToken: 'your_access_token',
+    ...
   },
   reducers: {
     ...searchPageReducers
@@ -325,31 +328,42 @@ console.log(engine.state.counter); // 1
 
 #### Creating headless controllers
 
-It is possible to create custom headless controllers using the abstract `Controller` class. When using Typescript, it is necessary to specify the type of the engine and its state.
+It is possible to create custom headless controllers using the `buildController` function. When using Typescript, it is necessary to specify the type of the engine.
 
 ```typescript
-import {Controller} from '@coveo/headless';
+import {
+  Engine,
+  buildController
+} from '@coveo/headless';
 import {
   incrementCounterAction,
   decrementCounterAction,
 } from './counter-reducer';
 import {engine} from './engine';
 
-class Counter extends Controller<typeof engine.state> {
-  constructor(engine: typeof engine) {
-    super(engine);
-  }
+export type CounterState = Counter['state'];
 
-  public increment() {
-    this.dispatch(incrementCounterAction);
-  }
+export type Counter = ReturnType<typeof buildCounter>;
 
-  public decrement() {
-    this.dispatch(decrementCounterAction);
-  }
+export const buildCounter = (
+  engine: Engine
+) => {
+  const controller = buildController(engine);
 
-  public get state() {
-    return this.engine.state.counter;
-  }
-}
+  return {
+    ...controller,
+
+    increment() {
+      dispatch(incrementCounterAction);
+    },
+
+    decrement() {
+      dispatch(decrementCounterAction);
+    },
+
+    get state() {
+      return engine.state.counter;
+    },
+  };
+};
 ```

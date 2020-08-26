@@ -29,7 +29,7 @@
     "husky": "^4.2.3",
     "lerna": "^3.20.2",
     "lint-staged": "^10.0.8",
-    "typescript": "^3.9.2"
+    "typescript": "^3.9.7"
   },
   "husky": {
     "hooks": {
@@ -56,6 +56,10 @@
   "lint-staged": {
     "**/*.ts?(x)": [
       "npm run fix",
+      "git add"
+    ],
+    "**/*.html": [
+      "prettier --print-width 120 --write",
       "git add"
     ]
   },

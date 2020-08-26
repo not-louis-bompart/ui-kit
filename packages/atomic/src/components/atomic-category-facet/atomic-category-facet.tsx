@@ -58,14 +58,8 @@ export class AtomicCategoryFacet {
   }
 
   private buildValue(item: CategoryFacetValue) {
-    const definitelyHasNoMoreValues = item.moreValuesAvailable === false;
-
     return (
-      <div
-        onClick={() =>
-          !definitelyHasNoMoreValues && this.categoryFacet.toggleSelect(item)
-        }
-      >
+      <div onClick={() => this.categoryFacet.toggleSelect(item)}>
         <span>
           {item.value} {item.numberOfResults}
         </span>

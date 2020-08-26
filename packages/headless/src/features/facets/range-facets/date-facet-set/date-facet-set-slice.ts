@@ -3,6 +3,8 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   registerDateFacet,
   toggleSelectDateFacetValue,
+  deselectAllDateFacetValues,
+  updateDateFacetSortCriterion,
 } from './date-facet-actions';
 import {change} from '../../../history/history-actions';
 import {executeSearch} from '../../../search/search-actions';
@@ -13,6 +15,10 @@ import {
   toggleSelectRangeValue,
   onRangeFacetRequestFulfilled,
 } from '../generic/range-facet-reducers';
+import {
+  handleFacetSortCriterionUpdate,
+  handleFacetDeselectAll,
+} from '../../generic/facet-reducer-helpers';
 
 export type DateFacetSetState = Record<string, DateFacetRequest>;
 
@@ -37,6 +43,12 @@ export const dateFacetSetReducer = createReducer(
           facetId,
           selection
         );
+      })
+      .addCase(deselectAllDateFacetValues, (state, action) => {
+        handleFacetDeselectAll<DateFacetRequest>(state, action.payload);
+      })
+      .addCase(updateDateFacetSortCriterion, (state, action) => {
+        handleFacetSortCriterionUpdate<DateFacetRequest>(state, action.payload);
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as DateFacetResponse[];

@@ -3,6 +3,8 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   registerNumericFacet,
   toggleSelectNumericFacetValue,
+  deselectAllNumericFacetValues,
+  updateNumericFacetSortCriterion,
 } from './numeric-facet-actions';
 import {change} from '../../../history/history-actions';
 import {executeSearch} from '../../../search/search-actions';
@@ -13,6 +15,10 @@ import {
   toggleSelectRangeValue,
   onRangeFacetRequestFulfilled,
 } from '../generic/range-facet-reducers';
+import {
+  handleFacetSortCriterionUpdate,
+  handleFacetDeselectAll,
+} from '../../generic/facet-reducer-helpers';
 
 export type NumericFacetSetState = Record<string, NumericFacetRequest>;
 
@@ -36,6 +42,15 @@ export const numericFacetSetReducer = createReducer(
           state,
           facetId,
           selection
+        );
+      })
+      .addCase(deselectAllNumericFacetValues, (state, action) => {
+        handleFacetDeselectAll<NumericFacetRequest>(state, action.payload);
+      })
+      .addCase(updateNumericFacetSortCriterion, (state, action) => {
+        handleFacetSortCriterionUpdate<NumericFacetRequest>(
+          state,
+          action.payload
         );
       })
       .addCase(executeSearch.fulfilled, (state, action) => {

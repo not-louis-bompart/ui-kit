@@ -92,13 +92,6 @@ export const buildSearchBox = (
     ...controller,
 
     /**
-     * A unique identifier for the controller.
-     */
-    get id() {
-      return options.id;
-    },
-
-    /**
      * Updates the search box text value and shows the suggestions for that value.
      * @param value  The string value to update the search box with.
      */
@@ -170,6 +163,7 @@ export const buildSearchBox = (
           value: completion.expression,
         })),
         redirectTo: state.redirection.redirectTo,
+        isLoading: state.search.isLoading,
       };
     },
   };

@@ -83,7 +83,9 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
         | undefined;
 
       const {parents, values} = partitionIntoParentsAndValues(response);
-      return {parents, values, sortCriteria: request.sortCriteria};
+      const isLoading = engine.state.search.isLoading;
+
+      return {parents, values, isLoading, sortCriteria: request.sortCriteria};
     },
   };
 }
@@ -106,6 +108,13 @@ function partitionIntoParentsAndValues(
   while (values.length && values[0].children.length) {
     parents = [...parents, ...values];
     values = values[0].children;
+  }
+
+  const selectedLeafValue = values.find((v) => v.state === 'selected');
+
+  if (selectedLeafValue) {
+    parents = [...parents, selectedLeafValue];
+    values = [];
   }
 
   return {parents, values};

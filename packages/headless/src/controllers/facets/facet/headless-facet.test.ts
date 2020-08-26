@@ -121,36 +121,40 @@ describe('facet', () => {
     expect(facet.isValueSelected(facetValue)).toBe(false);
   });
 
-  it('#deselectAll dispatches a deselectAllFacetValues action with the facet id', () => {
-    facet.deselectAll();
-    expect(engine.actions).toContainEqual(
-      deselectAllFacetValues(options.facetId)
-    );
+  describe('#deselectAll', () => {
+    it('dispatches #deselectAllFacetValues with the facet id', () => {
+      facet.deselectAll();
+      expect(engine.actions).toContainEqual(
+        deselectAllFacetValues(options.facetId)
+      );
+    });
+
+    it('dispatches a search', () => {
+      facet.deselectAll();
+
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(engine.actions).toContainEqual(action);
+    });
   });
 
-  it('#deselectAll dispatches a search', () => {
-    facet.deselectAll();
+  describe('#state.hasActiveValues', () => {
+    it('when #state.values has a value with a non-idle state, it returns true', () => {
+      const facetResponse = buildMockFacetResponse({facetId: options.facetId});
+      facetResponse.values = [buildMockFacetValue({state: 'selected'})];
+      state.search.response.facets = [facetResponse];
 
-    const action = engine.actions.find(
-      (a) => a.type === executeSearch.pending.type
-    );
-    expect(engine.actions).toContainEqual(action);
-  });
+      expect(facet.state.hasActiveValues).toBe(true);
+    });
 
-  it('when #state.values has a value with a non-idle state, #hasActiveValues returns true', () => {
-    const facetResponse = buildMockFacetResponse({facetId: options.facetId});
-    facetResponse.values = [buildMockFacetValue({state: 'selected'})];
-    state.search.response.facets = [facetResponse];
+    it('when #state.values only has idle values, it returns false', () => {
+      const facetResponse = buildMockFacetResponse({facetId: options.facetId});
+      facetResponse.values = [buildMockFacetValue({state: 'idle'})];
+      state.search.response.facets = [facetResponse];
 
-    expect(facet.hasActiveValues).toBe(true);
-  });
-
-  it('when #state.values only has idle values, #hasActiveValues returns false', () => {
-    const facetResponse = buildMockFacetResponse({facetId: options.facetId});
-    facetResponse.values = [buildMockFacetValue({state: 'idle'})];
-    state.search.response.facets = [facetResponse];
-
-    expect(facet.hasActiveValues).toBe(false);
+      expect(facet.state.hasActiveValues).toBe(false);
+    });
   });
 
   it('#sortBy dispatches a #updateFacetSortCriterion action with the passed value', () => {
@@ -247,9 +251,9 @@ describe('facet', () => {
     });
   });
 
-  describe('#canShowMoreValues', () => {
+  describe('#state.canShowMoreValues', () => {
     it('when there is no response, it returns false', () => {
-      expect(facet.canShowMoreValues).toBe(false);
+      expect(facet.state.canShowMoreValues).toBe(false);
     });
 
     it('when #moreValuesAvailable on the response is true, it returns true', () => {
@@ -259,7 +263,7 @@ describe('facet', () => {
       });
 
       state.search.response.facets = [facetResponse];
-      expect(facet.canShowMoreValues).toBe(true);
+      expect(facet.state.canShowMoreValues).toBe(true);
     });
 
     it('when #moreValuesAvailable on the response is false, it returns false', () => {
@@ -269,7 +273,7 @@ describe('facet', () => {
       });
 
       state.search.response.facets = [facetResponse];
-      expect(facet.canShowMoreValues).toBe(false);
+      expect(facet.state.canShowMoreValues).toBe(false);
     });
   });
 
@@ -330,7 +334,7 @@ describe('facet', () => {
     });
   });
 
-  describe('#canShowLessValues', () => {
+  describe('#state.canShowLessValues', () => {
     it('when the number of currentValues is equal to the configured number, it returns false', () => {
       options.numberOfValues = 1;
 
@@ -339,7 +343,7 @@ describe('facet', () => {
 
       initFacet();
 
-      expect(facet.canShowLessValues).toBe(false);
+      expect(facet.state.canShowLessValues).toBe(false);
     });
 
     it('when the number of currentValues is greater than the configured number, it returns true', () => {
@@ -349,7 +353,7 @@ describe('facet', () => {
       setFacetRequest({currentValues: [value, value]});
       initFacet();
 
-      expect(facet.canShowLessValues).toBe(true);
+      expect(facet.state.canShowLessValues).toBe(true);
     });
 
     it(`when the number of currentValues is greater than the configured number,
@@ -360,7 +364,7 @@ describe('facet', () => {
       setFacetRequest({currentValues: [selectedValue, selectedValue]});
       initFacet();
 
-      expect(facet.canShowLessValues).toBe(false);
+      expect(facet.state.canShowLessValues).toBe(false);
     });
   });
 

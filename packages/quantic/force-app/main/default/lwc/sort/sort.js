@@ -6,7 +6,7 @@ export default class Sort extends LightningElement {
 
   /** @type {import("coveo").Sort} */
   sort;
-  /** @type {() => any} */
+  /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
   @api
@@ -16,7 +16,7 @@ export default class Sort extends LightningElement {
     }
 
     this.e = eng;
-    this.sort = new CoveoHeadless.Sort(this.e);
+    this.sort = CoveoHeadless.buildSort(this.e);
     this.unsubscribe = this.sort.subscribe(() => this.updateState());
   }
 
