@@ -55,7 +55,6 @@ export class AtomicCategoryFacet {
   }
 
   private get values() {
-    console.log(this.values);
     return this.state.values.map((value) => this.buildValue(value));
   }
 
@@ -81,10 +80,10 @@ export class AtomicCategoryFacet {
         <div>
           <span>{this.label}</span>
         </div>
-        {/*<select onInput={this.handleSelect}>*/}
-        {/*  <option value='occurrences'>Occurrences</option>*/}
-        {/*  <option value='alphanumeric'>Alphanumeric</option>*/}
-        {/*</select>*/}
+        <select onInput={this.handleSelect}>
+          <option value="occurrences">Occurrences</option>
+          <option value="alphanumeric">Alphanumeric</option>
+        </select>
         <div>{this.parents}</div>
         <div>{this.values}</div>
       </div>
