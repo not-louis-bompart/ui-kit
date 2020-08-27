@@ -65,6 +65,17 @@ describe('category facet slice', () => {
     expect(finalState[facetId].sortCriteria).toBe(sortCriterion);
   });
 
+  it('#updateCategoryFacetSortCriterion does nothing when the facetID is not registered', () => {
+    const sortCriterion: CategoryFacetSortCriterion = 'alphanumeric';
+
+    expect(() =>
+      categoryFacetSetReducer(
+        state,
+        updateCategoryFacetSortCriterion({facetId, criterion: sortCriterion})
+      )
+    ).not.toThrow();
+  });
+
   it('#registerCategoryFacet with a registered id does not overwrite a category facet', () => {
     const options: CategoryFacetRegistrationOptions = {
       facetId,

@@ -100,12 +100,40 @@ describe('category facet', () => {
       state.search.response.facets = [response];
     });
 
+    it('#state.parents contains the outer and middle values', () => {
+      expect(categoryFacet.state.parents).toEqual([outerValue, middleValue]);
+    });
+
     it('#state.values contains the innermost values', () => {
       expect(categoryFacet.state.values).toBe(innerValues);
     });
 
     it('#state.parents contains the outer and middle values', () => {
       expect(categoryFacet.state.parents).toEqual([outerValue, middleValue]);
+    });
+  });
+
+  describe('when the category facet has a selected leaf value with no children', () => {
+    const selectedValue = buildMockCategoryFacetValue({
+      value: 'A',
+      state: 'selected',
+      children: [],
+    });
+
+    beforeEach(() => {
+      const response = buildMockCategoryFacetResponse({
+        facetId,
+        values: [selectedValue],
+      });
+      state.search.response.facets = [response];
+    });
+
+    it('#state.parents contains the selected leaf value', () => {
+      expect(categoryFacet.state.parents).toEqual([selectedValue]);
+    });
+
+    it('#state.values is an empty array', () => {
+      expect(categoryFacet.state.values).toEqual([]);
     });
   });
 
@@ -140,7 +168,7 @@ describe('category facet', () => {
   });
 
   it('#isSortedBy returns correct value', () => {
-    expect(categoryFacet.isSortedBy('alphanumeric')).toBeFalsy();
-    expect(categoryFacet.isSortedBy('occurrences')).toBeTruthy();
+    expect(categoryFacet.isSortedBy('alphanumeric')).toBe(false);
+    expect(categoryFacet.isSortedBy('occurrences')).toBe(true);
   });
 });
