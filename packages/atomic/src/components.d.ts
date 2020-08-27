@@ -61,6 +61,10 @@ export namespace Components {
     }
     interface AtomicSortDropdown {
     }
+    interface AtomicTab {
+        "cq": string;
+        "isActive": boolean;
+    }
 }
 declare global {
     interface HTMLAtomicCategoryFacetElement extends Components.AtomicCategoryFacet, HTMLStencilElement {
@@ -165,6 +169,12 @@ declare global {
         prototype: HTMLAtomicSortDropdownElement;
         new (): HTMLAtomicSortDropdownElement;
     };
+    interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
+    }
+    var HTMLAtomicTabElement: {
+        prototype: HTMLAtomicTabElement;
+        new (): HTMLAtomicTabElement;
+    };
     interface HTMLElementTagNameMap {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-date-facet": HTMLAtomicDateFacetElement;
@@ -183,6 +193,7 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
+        "atomic-tab": HTMLAtomicTabElement;
     }
 }
 declare namespace LocalJSX {
@@ -237,6 +248,10 @@ declare namespace LocalJSX {
     }
     interface AtomicSortDropdown {
     }
+    interface AtomicTab {
+        "cq"?: string;
+        "isActive"?: boolean;
+    }
     interface IntrinsicElements {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-date-facet": AtomicDateFacet;
@@ -255,6 +270,7 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-sort-dropdown": AtomicSortDropdown;
+        "atomic-tab": AtomicTab;
     }
 }
 export { LocalJSX as JSX };
@@ -278,6 +294,7 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
+            "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
         }
     }
 }

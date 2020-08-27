@@ -30,6 +30,9 @@ export interface SearchParametersState {
    */
   query: QueryState;
 
+  /**
+   * The current cq
+   */
   constantQuery: ConstantQueryState;
 
   /**

@@ -29,6 +29,7 @@ import {
   getCategoryFacetSetInitialState,
   CategoryFacetSetState,
 } from '../facets/category-facet-set/category-facet-set-slice';
+import {getInitialConstantQueryState} from '../constant-query/constant-query-slice';
 
 export const getHistoryEmptyState = (): SearchParametersState => ({
   context: getContextInitialState(),
@@ -38,6 +39,7 @@ export const getHistoryEmptyState = (): SearchParametersState => ({
   categoryFacetSet: getCategoryFacetSetInitialState(),
   pagination: getPaginationInitialState(),
   query: getQueryInitialState(),
+  constantQuery: getInitialConstantQueryState(),
   sortCriteria: getSortCriteriaInitialState(),
   querySet: getQuerySetInitialState(),
   pipeline: getPipelineInitialState(),

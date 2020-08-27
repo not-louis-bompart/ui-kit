@@ -4,6 +4,8 @@ import {
   registerConstantQuery,
   updateConstantQuery,
 } from '../../features/constant-query/constant-query-actions';
+import {executeSearch} from '../../features/search/search-actions';
+import {logGenericSearchEvent} from '../../features/analytics/analytics-actions';
 
 export interface TabProps {
   cq: string;
@@ -15,6 +17,7 @@ export interface TabInitialState {
 }
 
 export type Tab = ReturnType<typeof buildTab>;
+export type TabState = Tab['state'];
 
 export function buildTab(engine: Engine, props: TabProps) {
   const controller = buildController(engine);
@@ -34,6 +37,7 @@ export function buildTab(engine: Engine, props: TabProps) {
      */
     select() {
       dispatch(updateConstantQuery(props.cq));
+      dispatch(executeSearch(logGenericSearchEvent({evt: 'test'})));
     },
 
     get state() {
