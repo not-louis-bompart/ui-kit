@@ -12,25 +12,38 @@ import {Schema, StringValue} from '@coveo/bueno';
   shadow: true,
 })
 export class AtomicSearchInterface {
-  // @Prop() identifier?: string; TODO: add identifier
   @Prop() sample = false;
   @Prop() organizationId?: string;
   @Prop() accessToken?: string;
   @Prop() renewAccessToken?: () => Promise<string>;
 
-  @Prop() engine: Engine;
+  @Prop() engine?: Engine;
 
   private error?: Error;
 
   constructor() {
+    const config = this.configuration;
+    if (!config) {
+      this.error = new Error(
+        'The atomic-search-interface component configuration is faulty, see the console for more details.'
+      );
+      return;
+    }
+
     this.engine = new HeadlessEngine({
-      configuration: this.configuration,
+      configuration: config,
       reducers: searchPageReducers,
     });
   }
 
-  get configuration(): HeadlessConfigurationOptions {
-    if (this.sample && !this.organizationId && !this.accessToken) {
+  get configuration(): HeadlessConfigurationOptions | null {
+    if (this.sample) {
+      if (this.organizationId || this.accessToken) {
+        console.warn(
+          'You have a conflicting configuration on the atomic-search-interface component.',
+          'When the sample prop is defined, the access-token and organization-id should not be defined and will be ignored.'
+        );
+      }
       return HeadlessEngine.getSampleConfiguration();
     }
 
@@ -43,10 +56,8 @@ export class AtomicSearchInterface {
         accessToken: this.accessToken,
       });
     } catch (error) {
-      this.error = new Error(
-        'The atomic-search-interface component configuration is faulty, see the console for more details.'
-      );
-      throw error;
+      console.error(error);
+      return null;
     }
 
     return {
