@@ -68,11 +68,11 @@ export class AtomicCategoryFacet {
     );
   }
 
-  private handleSelect(event: Event) {
+  private handleSelect = (event: Event) => {
     const target = event.target as HTMLInputElement;
     const criterion = target.value as CategoryFacetSortCriterion;
     this.categoryFacet.sortBy(criterion);
-  }
+  };
 
   render() {
     return (
