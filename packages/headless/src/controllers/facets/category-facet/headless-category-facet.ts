@@ -17,10 +17,10 @@ import {
   FacetSelectionChangeMetadata,
   logFacetDeselect,
   logFacetSelect,
+  logFacetUpdateSort,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {categoryFacetRequestSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
-import {logCategoryFacetUpdateSort} from '../../../features/facets/category-facet-set/category-facet-set-analytics-actions';
 
 export type CategoryFacetProps = {
   options: CategoryFacetOptions;
@@ -84,7 +84,7 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       const facetId = options.facetId;
 
       dispatch(updateCategoryFacetSortCriterion({facetId, criterion}));
-      dispatch(executeSearch(logCategoryFacetUpdateSort({facetId, criterion})));
+      dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
     },
 
     /**
