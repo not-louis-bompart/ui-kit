@@ -7,6 +7,7 @@ import {
   CategoryFacetValue,
   Unsubscribe,
   CategoryFacetSortCriterion,
+  FacetSortCriterion,
 } from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
@@ -68,8 +69,24 @@ export class AtomicCategoryFacet {
     );
   }
 
+  private get sortOptions() {
+    const criteria: CategoryFacetSortCriterion[] = [
+      'occurrences',
+      'alphanumeric',
+    ];
+
+    return criteria.map((criterion) => (
+      <option
+        value={criterion}
+        selected={this.categoryFacet.isSortedBy(criterion)}
+      >
+        {criterion}
+      </option>
+    ));
+  }
+
   private handleSelect = (event: Event) => {
-    const target = event.target as HTMLInputElement;
+    const target = event.target as HTMLSelectElement;
     const criterion = target.value as CategoryFacetSortCriterion;
     this.categoryFacet.sortBy(criterion);
   };
@@ -80,10 +97,7 @@ export class AtomicCategoryFacet {
         <div>
           <span>{this.label}</span>
         </div>
-        <select onInput={this.handleSelect}>
-          <option value="occurrences">Occurrences</option>
-          <option value="alphanumeric">Alphanumeric</option>
-        </select>
+        <select onInput={this.handleSelect}>{this.sortOptions}</select>
         <div>{this.parents}</div>
         <div>{this.values}</div>
       </div>
