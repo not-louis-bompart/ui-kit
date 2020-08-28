@@ -7,7 +7,6 @@ import {
   CategoryFacetValue,
   Unsubscribe,
   CategoryFacetSortCriterion,
-  FacetSortCriterion,
 } from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
