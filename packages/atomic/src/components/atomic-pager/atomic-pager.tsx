@@ -1,6 +1,12 @@
 import {Component, h, State} from '@stencil/core';
-import {Pager, PagerState, Unsubscribe, buildPager} from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {
+  Pager,
+  PagerState,
+  Unsubscribe,
+  buildPager,
+  Engine,
+} from '@coveo/headless';
+import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
 
 @Component({
   tag: 'atomic-pager',
@@ -8,12 +14,27 @@ import {headlessEngine} from '../../engine';
   shadow: true,
 })
 export class AtomicPager {
-  private pager: Pager;
-  private unsubscribe: Unsubscribe;
   @State() state!: PagerState;
+  @EngineProvider() engine!: Engine;
 
-  constructor() {
-    this.pager = buildPager(headlessEngine);
+  private pager!: Pager;
+  private error?: Error;
+  private unsubscribe: Unsubscribe = () => {};
+
+  public componentWillLoad() {
+    try {
+      this.configure();
+    } catch (error) {
+      this.error = error;
+    }
+  }
+
+  private configure() {
+    if (!this.engine) {
+      throw new EngineProviderError('atomic-pager');
+    }
+
+    this.pager = buildPager(this.engine);
     this.unsubscribe = this.pager.subscribe(() => this.updateState());
   }
 
@@ -60,6 +81,12 @@ export class AtomicPager {
   }
 
   render() {
+    if (this.error) {
+      return (
+        <atomic-component-error error={this.error}></atomic-component-error>
+      );
+    }
+
     return (
       <span>
         {this.backButton}

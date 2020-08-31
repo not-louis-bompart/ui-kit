@@ -4,8 +4,9 @@ import {
   ResultsPerPageState,
   Unsubscribe,
   buildResultsPerPage,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
 
 @Component({
   tag: 'atomic-results-per-page',
@@ -13,12 +14,27 @@ import {headlessEngine} from '../../engine';
   shadow: true,
 })
 export class AtomicResultsPerPage {
-  private resultsPerPage: ResultsPerPage;
-  private unsubscribe: Unsubscribe;
   @State() state!: ResultsPerPageState;
+  @EngineProvider() engine!: Engine;
 
-  constructor() {
-    this.resultsPerPage = buildResultsPerPage(headlessEngine);
+  private resultsPerPage!: ResultsPerPage;
+  private error?: Error;
+  private unsubscribe: Unsubscribe = () => {};
+
+  public componentWillLoad() {
+    try {
+      this.configure();
+    } catch (error) {
+      this.error = error;
+    }
+  }
+
+  private configure() {
+    if (!this.engine) {
+      throw new EngineProviderError('atomic-results-per-page');
+    }
+
+    this.resultsPerPage = buildResultsPerPage(this.engine);
     this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());
   }
 
@@ -43,6 +59,12 @@ export class AtomicResultsPerPage {
   }
 
   public render() {
+    if (this.error) {
+      return (
+        <atomic-component-error error={this.error}></atomic-component-error>
+      );
+    }
+
     return <div>{this.buttons}</div>;
   }
 }

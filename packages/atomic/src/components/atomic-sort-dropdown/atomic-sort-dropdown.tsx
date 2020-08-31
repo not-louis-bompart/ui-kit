@@ -8,8 +8,9 @@ import {
   buildFieldSortCriterion,
   Unsubscribe,
   buildSort,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
 
 enum SortOption {
   Relevance = 'relevance',
@@ -25,13 +26,27 @@ enum SortOption {
 })
 export class AtomicSortDropdown {
   @State() state!: SortState;
+  @EngineProvider() engine!: Engine;
 
-  private sort: Sort;
-  private unsubscribe: Unsubscribe;
+  private sort!: Sort;
+  private error?: Error;
+  private unsubscribe: Unsubscribe = () => {};
 
-  constructor() {
+  public componentWillLoad() {
+    try {
+      this.configure();
+    } catch (error) {
+      this.error = error;
+    }
+  }
+
+  private configure() {
+    if (!this.engine) {
+      throw new EngineProviderError('atomic-sort-dropdown');
+    }
+
     const initialState: Partial<SortInitialState> = {criterion: this.relevance};
-    this.sort = buildSort(headlessEngine, {initialState});
+    this.sort = buildSort(this.engine, {initialState});
     this.unsubscribe = this.sort.subscribe(() => this.updateState());
   }
 
@@ -85,6 +100,12 @@ export class AtomicSortDropdown {
   }
 
   render() {
+    if (this.error) {
+      return (
+        <atomic-component-error error={this.error}></atomic-component-error>
+      );
+    }
+
     return (
       <select name="sorts" onChange={(val) => this.select(val)}>
         <option

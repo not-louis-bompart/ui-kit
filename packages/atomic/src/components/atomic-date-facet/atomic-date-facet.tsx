@@ -7,8 +7,9 @@ import {
   DateFacetValue,
   RangeFacetSortCriterion,
   Unsubscribe,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
 
 @Component({
   tag: 'atomic-date-facet',
@@ -19,17 +20,31 @@ export class AtomicDateFacet {
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: DateFacetState;
+  @EngineProvider() engine!: Engine;
 
-  private facet: DateFacet;
-  private unsubscribe: Unsubscribe;
+  private facet!: DateFacet;
+  private error?: Error;
+  private unsubscribe: Unsubscribe = () => {};
 
-  constructor() {
+  public componentWillLoad() {
+    try {
+      this.configure();
+    } catch (error) {
+      this.error = error;
+    }
+  }
+
+  private configure() {
+    if (!this.engine) {
+      throw new EngineProviderError('atomic-date-facet');
+    }
+
     const options: DateFacetOptions = {
       field: this.field,
       generateAutomaticRanges: true,
     };
 
-    this.facet = buildDateFacet(headlessEngine, {options});
+    this.facet = buildDateFacet(this.engine, {options});
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
   }
 
@@ -90,6 +105,12 @@ export class AtomicDateFacet {
   }
 
   render() {
+    if (this.error) {
+      return (
+        <atomic-component-error error={this.error}></atomic-component-error>
+      );
+    }
+
     return (
       <div>
         <div>

@@ -4,6 +4,8 @@ import {
   searchPageReducers,
   Engine,
   HeadlessConfigurationOptions,
+  SearchActions,
+  AnalyticsActions,
 } from '@coveo/headless';
 import {Schema, StringValue} from '@coveo/bueno';
 
@@ -16,7 +18,6 @@ export class AtomicSearchInterface {
   @Prop() organizationId?: string;
   @Prop() accessToken?: string;
   @Prop() renewAccessToken?: () => Promise<string>;
-
   @Prop() engine?: Engine;
 
   private error?: Error;
@@ -65,6 +66,12 @@ export class AtomicSearchInterface {
       organizationId: this.organizationId!,
       renewAccessToken: this.renewAccessToken,
     };
+  }
+
+  componentDidLoad() {
+    this.engine!.dispatch(
+      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+    );
   }
 
   render() {

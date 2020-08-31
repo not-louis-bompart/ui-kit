@@ -6,8 +6,9 @@ import {
   CategoryFacetOptions,
   CategoryFacetValue,
   Unsubscribe,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
 
 @Component({
   tag: 'atomic-category-facet',
@@ -18,13 +19,27 @@ export class AtomicCategoryFacet {
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: CategoryFacetState;
+  @EngineProvider() engine!: Engine;
 
-  private categoryFacet: CategoryFacet;
-  private unsubscribe: Unsubscribe;
+  private categoryFacet!: CategoryFacet;
+  private error?: Error;
+  private unsubscribe: Unsubscribe = () => {};
 
-  constructor() {
+  public componentWillLoad() {
+    try {
+      this.configure();
+    } catch (error) {
+      this.error = error;
+    }
+  }
+
+  private configure() {
+    if (!this.engine) {
+      throw new EngineProviderError('atomic-category-facet');
+    }
+
     const options: CategoryFacetOptions = {field: this.field};
-    this.categoryFacet = buildCategoryFacet(headlessEngine, {options});
+    this.categoryFacet = buildCategoryFacet(this.engine, {options});
     this.unsubscribe = this.categoryFacet.subscribe(() => this.updateState());
   }
 
@@ -68,6 +83,12 @@ export class AtomicCategoryFacet {
   }
 
   render() {
+    if (this.error) {
+      return (
+        <atomic-component-error error={this.error}></atomic-component-error>
+      );
+    }
+
     return (
       <div>
         <div>

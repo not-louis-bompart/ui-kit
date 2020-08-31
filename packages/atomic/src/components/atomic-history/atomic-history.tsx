@@ -1,22 +1,39 @@
 import {Component, h, State} from '@stencil/core';
-import {headlessEngine} from '../../engine';
 import {
   History,
   HistoryState,
   Unsubscribe,
   buildHistory,
+  Engine,
 } from '@coveo/headless';
+import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
 
 @Component({
   tag: 'atomic-history',
   shadow: true,
 })
 export class AtomicHistory {
-  private history: History;
-  private unsubscribe: Unsubscribe;
   @State() state!: HistoryState;
-  constructor() {
-    this.history = buildHistory(headlessEngine);
+  @EngineProvider() engine!: Engine;
+
+  private history!: History;
+  private error?: Error;
+  private unsubscribe: Unsubscribe = () => {};
+
+  public componentWillLoad() {
+    try {
+      this.configure();
+    } catch (error) {
+      this.error = error;
+    }
+  }
+
+  private configure() {
+    if (!this.engine) {
+      throw new EngineProviderError('atomic-history');
+    }
+
+    this.history = buildHistory(this.engine);
     this.unsubscribe = this.history.subscribe(() => this.updateState());
   }
 
@@ -37,6 +54,12 @@ export class AtomicHistory {
   }
 
   public render() {
+    if (this.error) {
+      return (
+        <atomic-component-error error={this.error}></atomic-component-error>
+      );
+    }
+
     return (
       <div>
         <button onClick={() => this.back()}>BACK</button>
