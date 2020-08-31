@@ -117,6 +117,12 @@ export class AtomicCategoryFacet {
     this.categoryFacet.sortBy(criterion);
   };
 
+  private get showMore() {
+    return (
+      <span onClick={() => this.categoryFacet.showMoreValues()}>Show More</span>
+    );
+  }
+
   render() {
     if (this.error) {
       return (
@@ -134,6 +140,7 @@ export class AtomicCategoryFacet {
           <div>{this.resetButton}</div>
           <div>{this.parents}</div>
           <div>{this.values}</div>
+          <div>{this.showMore}</div>
         </div>
       </div>
     );

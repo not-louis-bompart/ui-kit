@@ -21,6 +21,7 @@ import {
   logFacetSelect,
   logFacetUpdateSort,
   logFacetClearAll,
+  logFacetShowMore,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
@@ -113,6 +114,15 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       return request.sortCriteria === criterion;
     },
 
+    showMoreValues() {
+      const facetId = options.facetId;
+      const request = getRequest();
+      const numberOfValues =
+        request.numberOfValues + (props.options.numberOfValues || 10);
+      console.log(numberOfValues);
+      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
+      dispatch(executeSearch(logFacetShowMore(facetId)));
+    },
     /**  @returns The state of the `CategoryFacet` controller.*/
     get state() {
       const request = getRequest();
