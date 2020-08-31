@@ -1,10 +1,14 @@
 import {createAction} from '@reduxjs/toolkit';
 /**
- * Register a category facet in the category facet set.
- * @param {CategoryFacetRegistrationOptions} CategoryFacetRegistrationOptions The options to register the category facet with.
+ * Sets cq to the value provided iff it is currently empty.
+ * @param {string} cq The value for the new constant query.
  */
 export const registerConstantQuery = createAction<string>(
   'constantQuery/register'
 );
 
+/**
+ * Sets cq to the value provided.
+ * @param {string} cq The value for the new constant query.
+ */
 export const updateConstantQuery = createAction<string>('constantQuery/update');

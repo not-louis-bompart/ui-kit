@@ -6,7 +6,7 @@ import {
 } from '../../features/constant-query/constant-query-actions';
 
 describe('Tab', () => {
-  const cq = 'abc123';
+  const expression = 'abc123';
   let engine: MockEngine;
   let props: TabProps;
   let tab: Tab;
@@ -19,7 +19,7 @@ describe('Tab', () => {
     engine = buildMockEngine();
     engine.state.constantQuery = {cq: ''};
     props = {
-      cq,
+      expression,
       initialState: {
         isActive: false,
       },
@@ -29,20 +29,20 @@ describe('Tab', () => {
   describe('initalization', () => {
     it('calls #registerConstantQuery if isActive is false', () => {
       initTab();
-      const action = registerConstantQuery(cq);
+      const action = registerConstantQuery(expression);
       expect(engine.actions).toContainEqual(action);
     });
 
     it('calls #updateConstantQuery if isActive is true', () => {
       props = {
-        cq,
+        expression,
         initialState: {
           isActive: true,
         },
       };
       initTab();
 
-      const action = updateConstantQuery(cq);
+      const action = updateConstantQuery(expression);
       expect(engine.actions).toContainEqual(action);
     });
   });
@@ -54,7 +54,7 @@ describe('Tab', () => {
 
     it('#select calls #updateConstantQuery', () => {
       tab.select();
-      const action = updateConstantQuery(cq);
+      const action = updateConstantQuery(expression);
       expect(engine.actions).toContainEqual(action);
     });
   });

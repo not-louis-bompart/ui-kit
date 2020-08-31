@@ -1,4 +1,4 @@
-import {Component, h, ComponentInterface, Prop, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import {buildTab, Tab, TabProps, TabState, Unsubscribe} from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
@@ -7,8 +7,8 @@ import {headlessEngine} from '../../engine';
   styleUrl: 'atomic-tab.css',
   shadow: true,
 })
-export class AtomicSearchBox implements ComponentInterface {
-  @Prop() cq = '';
+export class AtomicTab {
+  @Prop() expression = '';
   @Prop() isActive = false;
   @State() state!: TabState;
 
@@ -17,7 +17,7 @@ export class AtomicSearchBox implements ComponentInterface {
 
   constructor() {
     const options: TabProps = {
-      cq: this.cq,
+      expression: this.expression,
       initialState: {
         isActive: this.isActive,
       },
@@ -30,21 +30,21 @@ export class AtomicSearchBox implements ComponentInterface {
     this.unsubscribe();
   }
 
-  updateState = () => {
+  private updateState = () => {
     this.state = this.tab.state;
   };
 
-  handleClick = () => {
+  public handleClick = () => {
     this.tab.select();
   };
 
   render() {
     return (
-      <div class="tab" onClick={this.handleClick}>
-        <h3>
-          <slot />
-        </h3>
-      </div>
+      <a class="tab" onClick={this.handleClick}>
+        <p>
+          <slot/>
+        </p>
+      </a>
     );
   }
 }

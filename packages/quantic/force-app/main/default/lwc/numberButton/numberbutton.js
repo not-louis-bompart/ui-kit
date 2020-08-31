@@ -1,6 +1,6 @@
 import { LightningElement, api } from "lwc";
 
-export default class Numberbutton extends LightningElement {
+export default class NumberButton extends LightningElement {
   @api number;
   @api current;
 
@@ -9,7 +9,7 @@ export default class Numberbutton extends LightningElement {
   }
 
   goto() {
-    this.dispatchEvent(new CustomEvent("goto", { detail: this.number }));
+    this.dispatchEvent(new CustomEvent('goto', {detail: this.number}));
   }
 
   get variant() {

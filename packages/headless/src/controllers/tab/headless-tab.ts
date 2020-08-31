@@ -5,10 +5,10 @@ import {
   updateConstantQuery,
 } from '../../features/constant-query/constant-query-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {logGenericSearchEvent} from '../../features/analytics/analytics-actions';
+import {logInterfaceChange} from '../../features/analytics/analytics-actions';
 
 export interface TabProps {
-  cq: string;
+  expression: string;
   initialState: Partial<TabInitialState>;
 }
 
@@ -24,9 +24,9 @@ export function buildTab(engine: Engine, props: TabProps) {
   const {dispatch} = engine;
   const initConstantQuery = () => {
     if (props.initialState.isActive) {
-      return dispatch(updateConstantQuery(props.cq));
+      return dispatch(updateConstantQuery(props.expression));
     }
-    return dispatch(registerConstantQuery(props.cq));
+    return dispatch(registerConstantQuery(props.expression));
   };
   initConstantQuery();
 
@@ -36,12 +36,12 @@ export function buildTab(engine: Engine, props: TabProps) {
      * Makes this tab the active one
      */
     select() {
-      dispatch(updateConstantQuery(props.cq));
-      dispatch(executeSearch(logGenericSearchEvent({evt: 'test'})));
+      dispatch(updateConstantQuery(props.expression));
+      dispatch(executeSearch(logInterfaceChange()));
     },
 
     get state() {
-      const isActive = engine.state.constantQuery.cq === props.cq;
+      const isActive = engine.state.constantQuery.cq === props.expression;
       return {isActive};
     },
   };

@@ -62,8 +62,8 @@ export namespace Components {
     interface AtomicSortDropdown {
     }
     interface AtomicTab {
-        "cq": string;
-        "isActive": boolean;
+      'expression': string;
+      'isActive': boolean;
     }
 }
 declare global {
@@ -249,8 +249,8 @@ declare namespace LocalJSX {
     interface AtomicSortDropdown {
     }
     interface AtomicTab {
-        "cq"?: string;
-        "isActive"?: boolean;
+      'expression'?: string;
+      'isActive'?: boolean;
     }
     interface IntrinsicElements {
         "atomic-category-facet": AtomicCategoryFacet;
