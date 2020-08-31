@@ -11,6 +11,7 @@ import {
   Engine,
 } from '@coveo/headless';
 import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 enum SortOption {
   Relevance = 'relevance',
@@ -27,9 +28,9 @@ enum SortOption {
 export class AtomicSortDropdown {
   @State() state!: SortState;
   @EngineProvider() engine!: Engine;
+  @RenderError() error?: Error;
 
   private sort!: Sort;
-  private error?: Error;
   private unsubscribe: Unsubscribe = () => {};
 
   public componentWillLoad() {
@@ -100,12 +101,6 @@ export class AtomicSortDropdown {
   }
 
   render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
-
     return (
       <select name="sorts" onChange={(val) => this.select(val)}>
         <option

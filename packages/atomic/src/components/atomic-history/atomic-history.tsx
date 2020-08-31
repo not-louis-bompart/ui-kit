@@ -7,6 +7,7 @@ import {
   Engine,
 } from '@coveo/headless';
 import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-history',
@@ -15,9 +16,9 @@ import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
 export class AtomicHistory {
   @State() state!: HistoryState;
   @EngineProvider() engine!: Engine;
+  @RenderError() error?: Error;
 
   private history!: History;
-  private error?: Error;
   private unsubscribe: Unsubscribe = () => {};
 
   public componentWillLoad() {
@@ -54,12 +55,6 @@ export class AtomicHistory {
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
-
     return (
       <div>
         <button onClick={() => this.back()}>BACK</button>

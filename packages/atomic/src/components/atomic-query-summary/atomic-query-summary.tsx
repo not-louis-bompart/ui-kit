@@ -7,6 +7,7 @@ import {
   Engine,
 } from '@coveo/headless';
 import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-query-summary',
@@ -16,9 +17,9 @@ import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
 export class AtomicQuerySummary {
   @State() state!: QuerySummaryState;
   @EngineProvider() engine!: Engine;
+  @RenderError() error?: Error;
 
   private querySummary!: QuerySummary;
-  private error?: Error;
   private unsubscribe: Unsubscribe = () => {};
 
   public componentWillLoad() {
@@ -43,12 +44,6 @@ export class AtomicQuerySummary {
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
-
     // TODO: This whole render loop will not work with localization
     if (!this.state.hasResults) {
       return this.renderNoResults();

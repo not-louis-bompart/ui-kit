@@ -11,6 +11,7 @@ import {
   Engine,
 } from '@coveo/headless';
 import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-numeric-facet',
@@ -22,8 +23,8 @@ export class AtomicNumericFacet {
   @Prop() label = 'No label';
   @State() state!: NumericFacetState;
   @EngineProvider() engine!: Engine;
+  @RenderError() error?: Error;
 
-  private error?: Error;
   private unsubscribe: Unsubscribe = () => {};
   private facet!: NumericFacet;
 
@@ -113,12 +114,6 @@ export class AtomicNumericFacet {
   }
 
   render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
-
     return (
       <div>
         <div>

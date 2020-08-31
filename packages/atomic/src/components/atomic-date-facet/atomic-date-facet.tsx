@@ -10,6 +10,7 @@ import {
   Engine,
 } from '@coveo/headless';
 import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-date-facet',
@@ -21,9 +22,9 @@ export class AtomicDateFacet {
   @Prop() label = 'No label';
   @State() state!: DateFacetState;
   @EngineProvider() engine!: Engine;
+  @RenderError() error?: Error;
 
   private facet!: DateFacet;
-  private error?: Error;
   private unsubscribe: Unsubscribe = () => {};
 
   public componentWillLoad() {
@@ -105,12 +106,6 @@ export class AtomicDateFacet {
   }
 
   render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
-
     return (
       <div>
         <div>

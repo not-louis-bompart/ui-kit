@@ -10,6 +10,7 @@ import {
   CategoryFacetSortCriterion,
 } from '@coveo/headless';
 import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-category-facet',
@@ -21,9 +22,9 @@ export class AtomicCategoryFacet {
   @Prop() label = 'No label';
   @State() state!: CategoryFacetState;
   @EngineProvider() engine!: Engine;
+  @RenderError() error?: Error;
 
   private categoryFacet!: CategoryFacet;
-  private error?: Error;
   private unsubscribe: Unsubscribe = () => {};
 
   public componentWillLoad() {
@@ -117,19 +118,7 @@ export class AtomicCategoryFacet {
     this.categoryFacet.sortBy(criterion);
   };
 
-  private get showMore() {
-    return (
-      <span onClick={() => this.categoryFacet.showMoreValues()}>Show More</span>
-    );
-  }
-
   render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
-
     return (
       <div>
         <div>
@@ -140,7 +129,6 @@ export class AtomicCategoryFacet {
           <div>{this.resetButton}</div>
           <div>{this.parents}</div>
           <div>{this.values}</div>
-          <div>{this.showMore}</div>
         </div>
       </div>
     );

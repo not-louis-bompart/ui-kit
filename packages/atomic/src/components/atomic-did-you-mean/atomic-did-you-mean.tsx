@@ -7,6 +7,7 @@ import {
   Engine,
 } from '@coveo/headless';
 import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-did-you-mean',
@@ -16,8 +17,8 @@ import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
 export class AtomicDidYouMean {
   @State() state!: DidYouMeanState;
   @EngineProvider() engine!: Engine;
+  @RenderError() error?: Error;
 
-  private error?: Error;
   private didYouMean!: DidYouMean;
   private unsubscribe: Unsubscribe = () => {};
 
@@ -43,12 +44,6 @@ export class AtomicDidYouMean {
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
-
     if (!this.state.hasQueryCorrection) {
       return '';
     }

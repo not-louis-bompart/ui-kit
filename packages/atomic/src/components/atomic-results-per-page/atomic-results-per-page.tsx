@@ -7,6 +7,7 @@ import {
   Engine,
 } from '@coveo/headless';
 import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-results-per-page',
@@ -16,9 +17,9 @@ import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
 export class AtomicResultsPerPage {
   @State() state!: ResultsPerPageState;
   @EngineProvider() engine!: Engine;
+  @RenderError() error?: Error;
 
   private resultsPerPage!: ResultsPerPage;
-  private error?: Error;
   private unsubscribe: Unsubscribe = () => {};
 
   public componentWillLoad() {
@@ -59,12 +60,6 @@ export class AtomicResultsPerPage {
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
-
     return <div>{this.buttons}</div>;
   }
 }

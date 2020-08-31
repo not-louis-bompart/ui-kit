@@ -10,6 +10,7 @@ import {
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
 import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-result-list',
@@ -20,8 +21,8 @@ export class AtomicResultList {
   @Element() host!: HTMLDivElement;
   @EngineProvider() engine!: Engine;
   @State() state!: ResultListState;
+  @RenderError() error?: Error;
 
-  private error?: Error;
   private unsubscribe: Unsubscribe = () => {};
   private resultList!: ResultList;
   private resultTemplatesManager!: ResultTemplatesManager<string>;
@@ -93,12 +94,6 @@ export class AtomicResultList {
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
-
     return this.results;
   }
 }

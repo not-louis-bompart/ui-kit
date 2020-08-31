@@ -7,6 +7,7 @@ import {
   Engine,
 } from '@coveo/headless';
 import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-query-error',
@@ -16,9 +17,9 @@ import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
 export class AtomicQueryError {
   @State() state!: QueryErrorState;
   @EngineProvider() engine!: Engine;
+  @RenderError() error?: Error;
 
   private queryError!: QueryError;
-  private error?: Error;
   private unsubscribe: Unsubscribe = () => {};
 
   public componentWillLoad() {
@@ -58,12 +59,6 @@ export class AtomicQueryError {
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
-
     return this.results;
   }
 }
