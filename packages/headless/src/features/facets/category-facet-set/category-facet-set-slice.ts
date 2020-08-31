@@ -6,10 +6,20 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
+  deselectAllCategoryFacetValues,
+  updateCategoryFacetNumberOfValues,
+  updateCategoryFacetSortCriterion,
 } from './category-facet-set-actions';
-import {CategoryFacetRegistrationOptions} from './interfaces/options';
+import {
+  CategoryFacetRegistrationOptions,
+  CategoryFacetOptionalParameters,
+} from './interfaces/options';
 import {change} from '../../history/history-actions';
 import {CategoryFacetValue} from './interfaces/response';
+import {
+  handleFacetDeselectAll,
+  handleFacetUpdateNumberOfValues,
+} from '../generic/facet-reducer-helpers';
 
 export type CategoryFacetSetState = Record<string, CategoryFacetRequest>;
 
@@ -32,6 +42,16 @@ export const categoryFacetSetReducer = createReducer(
         state[facetId] = buildCategoryFacetRequest(options);
       })
       .addCase(change.fulfilled, (_, action) => action.payload.categoryFacetSet)
+      .addCase(updateCategoryFacetSortCriterion, (state, action) => {
+        const {facetId, criterion} = action.payload;
+        const request = state[facetId];
+
+        if (!request) {
+          return;
+        }
+
+        request.sortCriteria = criterion;
+      })
       .addCase(toggleSelectCategoryFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         const request = state[facetId];
@@ -68,24 +88,37 @@ export const categoryFacetSetReducer = createReducer(
         const valueRequest = convertCategoryFacetValueToRequest(selection);
         activeLevel.push(valueRequest);
         request.numberOfValues = 1;
+      })
+      .addCase(deselectAllCategoryFacetValues, (state, action) => {
+        handleFacetDeselectAll<CategoryFacetRequest>(state, action.payload);
+      })
+      .addCase(updateCategoryFacetNumberOfValues, (state, action) => {
+        handleFacetUpdateNumberOfValues<CategoryFacetRequest>(
+          state,
+          action.payload
+        );
       });
   }
 );
+
+export const defaultCategoryFacetOptions: CategoryFacetOptionalParameters = {
+  delimitingCharacter: '|',
+  filterFacetCount: false,
+  injectionDepth: 1000,
+  numberOfValues: 5,
+  sortCriteria: 'occurrences',
+  basePath: [],
+  filterByBasePath: true,
+};
 
 function buildCategoryFacetRequest(
   config: CategoryFacetRegistrationOptions
 ): CategoryFacetRequest {
   return {
+    ...defaultCategoryFacetOptions,
     currentValues: [],
-    delimitingCharacter: '|',
-    filterFacetCount: false,
-    injectionDepth: 1000,
-    numberOfValues: 5,
     preventAutoSelect: false,
-    sortCriteria: 'occurrences',
     type: 'hierarchical',
-    basePath: [],
-    filterByBasePath: true,
     ...config,
   };
 }

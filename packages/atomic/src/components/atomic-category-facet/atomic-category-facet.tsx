@@ -7,6 +7,7 @@ import {
   CategoryFacetValue,
   Unsubscribe,
   Engine,
+  CategoryFacetSortCriterion,
 } from '@coveo/headless';
 import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
 
@@ -82,6 +83,40 @@ export class AtomicCategoryFacet {
     );
   }
 
+  private get resetButton() {
+    if (!this.state.hasActiveValues) {
+      return null;
+    }
+
+    return (
+      <button onClick={() => this.categoryFacet.deselectAll()}>
+        All Categories
+      </button>
+    );
+  }
+
+  private get sortOptions() {
+    const criteria: CategoryFacetSortCriterion[] = [
+      'occurrences',
+      'alphanumeric',
+    ];
+
+    return criteria.map((criterion) => (
+      <option
+        value={criterion}
+        selected={this.categoryFacet.isSortedBy(criterion)}
+      >
+        {criterion}
+      </option>
+    ));
+  }
+
+  private handleSelect = (event: Event) => {
+    const target = event.target as HTMLSelectElement;
+    const criterion = target.value as CategoryFacetSortCriterion;
+    this.categoryFacet.sortBy(criterion);
+  };
+
   render() {
     if (this.error) {
       return (
@@ -93,9 +128,13 @@ export class AtomicCategoryFacet {
       <div>
         <div>
           <span>{this.label}</span>
+          <select onInput={this.handleSelect}>{this.sortOptions}</select>
         </div>
-        <div>{this.parents}</div>
-        <div>{this.values}</div>
+        <div>
+          <div>{this.resetButton}</div>
+          <div>{this.parents}</div>
+          <div>{this.values}</div>
+        </div>
       </div>
     );
   }

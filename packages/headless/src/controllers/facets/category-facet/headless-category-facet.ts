@@ -5,6 +5,9 @@ import {CategoryFacetRegistrationOptions} from '../../../features/facets/categor
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
+  deselectAllCategoryFacetValues,
+  updateCategoryFacetNumberOfValues,
+  updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {facetSelector} from '../../../features/facets/facet-set/facet-set-selectors';
 import {
@@ -16,7 +19,12 @@ import {
   FacetSelectionChangeMetadata,
   logFacetDeselect,
   logFacetSelect,
+  logFacetUpdateSort,
+  logFacetClearAll,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
+import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
+import {categoryFacetRequestSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
 
 export type CategoryFacetProps = {
   options: CategoryFacetOptions;
@@ -35,7 +43,11 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
   const {dispatch} = engine;
 
   const facetId = props.options.facetId || randomID('categoryFacet');
-  const options: CategoryFacetRegistrationOptions = {facetId, ...props.options};
+  const options: CategoryFacetRegistrationOptions = {
+    facetId,
+    ...defaultCategoryFacetOptions,
+    ...props.options,
+  };
 
   const getAnalyticsActionForToggleSelect = (selection: CategoryFacetValue) => {
     const payload: FacetSelectionChangeMetadata = {
@@ -45,6 +57,16 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
 
     const isSelected = selection.state === 'selected';
     return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
+  };
+
+  const getRequest = () => {
+    return categoryFacetRequestSelector(engine.state, facetId);
+  };
+
+  const getResponse = () => {
+    return facetSelector(engine.state, facetId) as
+      | CategoryFacetResponse
+      | undefined;
   };
 
   dispatch(registerCategoryFacet(options));
@@ -63,16 +85,50 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       dispatch(executeSearch(analyticsAction));
     },
 
+    /** Deselects all facet values.*/
+    deselectAll() {
+      const numberOfValues = options.numberOfValues!;
+
+      dispatch(deselectAllCategoryFacetValues(facetId));
+      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
+      dispatch(executeSearch(logFacetClearAll(facetId)));
+    },
+
+    /** Sorts the category facet values according to the passed criterion.
+     * @param {CategoryFacetSortCriterion} criterion The criterion to sort values by.
+     */
+    sortBy(criterion: CategoryFacetSortCriterion) {
+      const facetId = options.facetId;
+
+      dispatch(updateCategoryFacetSortCriterion({facetId, criterion}));
+      dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
+    },
+
+    /**
+     * Returns `true` if the category facet values are sorted according to the passed criterion and `false` otherwise.
+     * @param {CategoryFacetSortCriterion} criterion The criterion to compare.
+     */
+    isSortedBy(criterion: CategoryFacetSortCriterion) {
+      const request = getRequest();
+      return request.sortCriteria === criterion;
+    },
+
     /**  @returns The state of the `CategoryFacet` controller.*/
     get state() {
-      const response = facetSelector(engine.state, facetId) as
-        | CategoryFacetResponse
-        | undefined;
+      const request = getRequest();
+      const response = getResponse();
 
       const {parents, values} = partitionIntoParentsAndValues(response);
       const isLoading = engine.state.search.isLoading;
+      const hasActiveValues = parents.length !== 0;
 
-      return {parents, values, isLoading};
+      return {
+        parents,
+        values,
+        isLoading,
+        hasActiveValues,
+        sortCriteria: request.sortCriteria,
+      };
     },
   };
 }

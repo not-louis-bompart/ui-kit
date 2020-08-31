@@ -7,12 +7,17 @@ import {CategoryFacetRegistrationOptions} from './interfaces/options';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
+  deselectAllCategoryFacetValues,
+  updateCategoryFacetNumberOfValues,
+  updateCategoryFacetSortCriterion,
 } from './category-facet-set-actions';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {getHistoryEmptyState} from '../../history/history-slice';
 import {change} from '../../history/history-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request';
+import * as FacetReducers from '../generic/facet-reducer-helpers';
+import {CategoryFacetSortCriterion} from './interfaces/request';
 
 describe('category facet slice', () => {
   const facetId = '1';
@@ -53,6 +58,27 @@ describe('category facet slice', () => {
     });
   });
 
+  it('#updateCategoryFacetSortCriterion sets the correct sort criterion', () => {
+    const sortCriterion: CategoryFacetSortCriterion = 'alphanumeric';
+    state[facetId] = buildMockCategoryFacetRequest({facetId, field: 'a'});
+    const finalState = categoryFacetSetReducer(
+      state,
+      updateCategoryFacetSortCriterion({facetId, criterion: sortCriterion})
+    );
+    expect(finalState[facetId].sortCriteria).toBe(sortCriterion);
+  });
+
+  it('#updateCategoryFacetSortCriterion does nothing when the facetID is not registered', () => {
+    const sortCriterion: CategoryFacetSortCriterion = 'alphanumeric';
+
+    expect(() =>
+      categoryFacetSetReducer(
+        state,
+        updateCategoryFacetSortCriterion({facetId, criterion: sortCriterion})
+      )
+    ).not.toThrow();
+  });
+
   it('#registerCategoryFacet with a registered id does not overwrite a category facet', () => {
     const options: CategoryFacetRegistrationOptions = {
       facetId,
@@ -80,6 +106,29 @@ describe('category facet slice', () => {
     );
 
     expect(finalState).toEqual(categoryFacetSet);
+  });
+
+  it('#deselectAllCategoryFacetValues calls #handleFacetDeselectAll', () => {
+    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+    const action = deselectAllCategoryFacetValues('1');
+    categoryFacetSetReducer(state, action);
+
+    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
+  });
+
+  it('dispatching #updateCategoryFacetNumberOfValues calls #handleFacetUpdateNumberOfValues', () => {
+    jest.spyOn(FacetReducers, 'handleFacetUpdateNumberOfValues');
+    categoryFacetSetReducer(
+      state,
+      updateCategoryFacetNumberOfValues({
+        facetId: '1',
+        numberOfValues: 20,
+      })
+    );
+
+    expect(FacetReducers.handleFacetUpdateNumberOfValues).toHaveBeenCalledTimes(
+      1
+    );
   });
 
   describe('#toggleSelectCategoryFacetValue', () => {
