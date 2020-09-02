@@ -8,6 +8,7 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
+  updateCategoryFacetNestedNumberOfValues,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {facetSelector} from '../../../features/facets/facet-set/facet-set-selectors';
 import {
@@ -117,10 +118,15 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
     showMoreValues() {
       const facetId = options.facetId;
       const request = getRequest();
-      const numberOfValues =
-        request.numberOfValues + (props.options.numberOfValues || 10);
-      console.log(numberOfValues);
-      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
+
+      const {parents} = this.state;
+      const increment = props.options.numberOfValues || 5;
+      if (parents.length === 0) {
+        const numberOfValues = request.numberOfValues + increment;
+        dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
+      } else {
+        dispatch(updateCategoryFacetNestedNumberOfValues({facetId, increment}));
+      }
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },
     /**  @returns The state of the `CategoryFacet` controller.*/
@@ -131,7 +137,6 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       const {parents, values} = partitionIntoParentsAndValues(response);
       const isLoading = engine.state.search.isLoading;
       const hasActiveValues = parents.length !== 0;
-
       return {
         parents,
         values,

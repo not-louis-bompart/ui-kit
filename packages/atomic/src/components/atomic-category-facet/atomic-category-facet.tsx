@@ -118,6 +118,10 @@ export class AtomicCategoryFacet {
     this.categoryFacet.sortBy(criterion);
   };
 
+  private get showMore() {
+    return <a onClick={() => this.categoryFacet.showMoreValues()}>Show More</a>;
+  }
+
   render() {
     return (
       <div>
@@ -129,6 +133,7 @@ export class AtomicCategoryFacet {
           <div>{this.resetButton}</div>
           <div>{this.parents}</div>
           <div>{this.values}</div>
+          <div>{this.showMore}</div>
         </div>
       </div>
     );

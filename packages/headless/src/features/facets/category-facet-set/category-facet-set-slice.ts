@@ -9,6 +9,7 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
+  updateCategoryFacetNestedNumberOfValues,
 } from './category-facet-set-actions';
 import {
   CategoryFacetRegistrationOptions,
@@ -97,6 +98,19 @@ export const categoryFacetSetReducer = createReducer(
           state,
           action.payload
         );
+      })
+      .addCase(updateCategoryFacetNestedNumberOfValues, (state, action) => {
+        const {facetId, increment} = action.payload;
+        let value = state[facetId]?.currentValues[0];
+        if (!value) {
+          return;
+        }
+
+        while (value.children.length) {
+          value = value.children[0];
+        }
+
+        value.retrieveCount += increment;
       });
   }
 );
