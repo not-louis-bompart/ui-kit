@@ -63,7 +63,7 @@ export namespace Components {
     }
     interface AtomicSearchInterface {
         "accessToken"?: string;
-        "engine": Engine;
+        "engine"?: Engine;
         "organizationId"?: string;
         "renewAccessToken"?: () => Promise<string>;
         "sample": boolean;
@@ -71,8 +71,8 @@ export namespace Components {
     interface AtomicSortDropdown {
     }
     interface AtomicTab {
-      'expression': string;
-      'isActive': boolean;
+        "expression": string;
+        "isActive": boolean;
     }
 }
 declare global {
@@ -281,8 +281,8 @@ declare namespace LocalJSX {
     interface AtomicSortDropdown {
     }
     interface AtomicTab {
-      'expression'?: string;
-      'isActive'?: boolean;
+        "expression"?: string;
+        "isActive"?: boolean;
     }
     interface IntrinsicElements {
         "atomic-category-facet": AtomicCategoryFacet;

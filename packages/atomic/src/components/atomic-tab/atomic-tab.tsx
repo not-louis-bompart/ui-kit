@@ -40,11 +40,11 @@ export class AtomicTab {
 
   render() {
     return (
-      <a class="tab" onClick={this.handleClick}>
-        <p>
-          <slot/>
-        </p>
-      </a>
+      <button class="tab" onClick={this.handleClick}>
+        <span>
+          <slot />
+        </span>
+      </button>
     );
   }
 }

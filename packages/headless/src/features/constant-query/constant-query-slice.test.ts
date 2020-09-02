@@ -23,7 +23,7 @@ describe('constant query slice', () => {
     expect(state.cq).toEqual(cq);
   });
 
-  it('#registerConstantQuery updates cq if it is empty', () => {
+  it('#registerConstantQuery updates cq if it is empty && isRegistered is false', () => {
     const action = registerConstantQuery(cq);
     state = constantQueryReducer(state, action);
 
@@ -32,6 +32,13 @@ describe('constant query slice', () => {
 
   it('#registerConstantQuery does nothing if cq is not empty', () => {
     state.cq = 'world';
+    const action = registerConstantQuery(cq);
+    state = constantQueryReducer(state, action);
+
+    expect(state.cq).not.toEqual(cq);
+  });
+
+  it('#registerConstantQuery does nothing if cq is empty but isRegisted is true', () => {
     const action = registerConstantQuery(cq);
     state = constantQueryReducer(state, action);
 

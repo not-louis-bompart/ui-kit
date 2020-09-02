@@ -17,7 +17,7 @@ describe('Tab', () => {
 
   beforeEach(() => {
     engine = buildMockEngine();
-    engine.state.constantQuery = {cq: ''};
+    engine.state.constantQuery = {cq: '', isRegistered: false};
     props = {
       expression,
       initialState: {

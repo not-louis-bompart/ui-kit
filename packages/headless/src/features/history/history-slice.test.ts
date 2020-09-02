@@ -68,6 +68,7 @@ describe('history slice', () => {
         totalCountFiltered: 789,
       },
       query: {q: 'foo'},
+      constantQuery: {cq: '', isRegistered: false},
       querySet: {foo: 'bar', hello: 'world'},
       sortCriteria: 'date descending',
       pipeline: 'my-pipeline',

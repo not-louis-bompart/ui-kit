@@ -7,6 +7,7 @@ import {
 
 export const getInitialConstantQueryState: () => ConstantQueryState = () => ({
   cq: '',
+  isRegistered: false,
 });
 
 export const constantQueryReducer = createReducer(
@@ -15,7 +16,7 @@ export const constantQueryReducer = createReducer(
     builder
       .addCase(registerConstantQuery, (state, action) => {
         const cq = action.payload;
-        if (state.cq === '') {
+        if (state.cq === '' && !state.isRegistered) {
           state.cq = cq;
         }
       })
