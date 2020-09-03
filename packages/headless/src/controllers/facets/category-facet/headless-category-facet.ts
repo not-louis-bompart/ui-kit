@@ -138,7 +138,7 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       const {parents, values} = partitionIntoParentsAndValues(response);
       const isLoading = engine.state.search.isLoading;
       const hasActiveValues = parents.length !== 0;
-      const hasMoreValues =
+      const canShowMoreValues =
         parents.length > 0
           ? parents[parents.length - 1].moreValuesAvailable
           : response?.moreValuesAvailable || false;
@@ -147,7 +147,7 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
         values,
         isLoading,
         hasActiveValues,
-        hasMoreValues,
+        canShowMoreValues,
         sortCriteria: request.sortCriteria,
       };
     },

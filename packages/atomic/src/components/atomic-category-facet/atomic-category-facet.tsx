@@ -119,7 +119,7 @@ export class AtomicCategoryFacet {
   };
 
   private get showMore() {
-    if (!this.state.hasMoreValues) {
+    if (!this.state.canShowMoreValues) {
       return null;
     }
     return (
