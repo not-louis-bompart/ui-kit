@@ -119,7 +119,14 @@ export class AtomicCategoryFacet {
   };
 
   private get showMore() {
-    return <a onClick={() => this.categoryFacet.showMoreValues()}>Show More</a>;
+    if (!this.state.hasMoreValues) {
+      return null;
+    }
+    return (
+      <button onClick={() => this.categoryFacet.showMoreValues()}>
+        Show More
+      </button>
+    );
   }
 
   render() {

@@ -45,7 +45,7 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
   const {dispatch} = engine;
 
   const facetId = props.options.facetId || randomID('categoryFacet');
-  const options: CategoryFacetRegistrationOptions = {
+  const options: Required<CategoryFacetRegistrationOptions> = {
     facetId,
     ...defaultCategoryFacetOptions,
     ...props.options,
@@ -114,13 +114,14 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       const request = getRequest();
       return request.sortCriteria === criterion;
     },
-
+    /**
+     * Displays more values for the current selected category if they exist
+     */
     showMoreValues() {
-      const facetId = options.facetId;
+      const {facetId, numberOfValues: increment} = options;
       const request = getRequest();
 
       const {parents} = this.state;
-      const increment = props.options.numberOfValues || 5;
       if (parents.length === 0) {
         const numberOfValues = request.numberOfValues + increment;
         dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
@@ -137,11 +138,16 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       const {parents, values} = partitionIntoParentsAndValues(response);
       const isLoading = engine.state.search.isLoading;
       const hasActiveValues = parents.length !== 0;
+      const hasMoreValues =
+        parents.length > 0
+          ? parents[parents.length - 1].moreValuesAvailable
+          : response?.moreValuesAvailable || false;
       return {
         parents,
         values,
         isLoading,
         hasActiveValues,
+        hasMoreValues,
         sortCriteria: request.sortCriteria,
       };
     },

@@ -11,6 +11,7 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
+  updateCategoryFacetNestedNumberOfValues,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
@@ -204,6 +205,80 @@ describe('category facet', () => {
       state.search.response.facets = [response];
 
       expect(categoryFacet.state.hasActiveValues).toBe(false);
+    });
+  });
+
+  describe('#state.hasMoreValues', () => {
+    it('if currentValues is empty, hasMoreValues is false', () => {
+      expect(categoryFacet.state.hasMoreValues).toBe(false);
+    });
+
+    it('if currentValues has a value with no children and moreResponseAvailable is true, hasMoreValues is true', () => {
+      const response = buildMockCategoryFacetResponse({
+        facetId,
+        moreValuesAvailable: true,
+      });
+      state.search.response.facets = [response];
+
+      expect(categoryFacet.state.hasMoreValues).toBe(true);
+    });
+
+    it('if currentValues has a value with 1 child', () => {
+      const values = [
+        buildMockCategoryFacetValue({
+          numberOfResults: 10,
+          state: 'selected',
+          moreValuesAvailable: true,
+        }),
+      ];
+      const response = buildMockCategoryFacetResponse({facetId, values});
+
+      state.search.response.facets = [response];
+      expect(categoryFacet.state.hasMoreValues).toBe(true);
+    });
+
+    it('if currentValues has a value with more than 1 child', () => {
+      const nestedChild = buildMockCategoryFacetValue({
+        numberOfResults: 10,
+        state: 'selected',
+        moreValuesAvailable: true,
+      });
+      const values = [
+        buildMockCategoryFacetValue({
+          numberOfResults: 10,
+          moreValuesAvailable: false,
+          children: [nestedChild],
+        }),
+      ];
+      const response = buildMockCategoryFacetResponse({facetId, values});
+
+      state.search.response.facets = [response];
+      expect(categoryFacet.state.hasMoreValues).toBe(true);
+    });
+  });
+
+  describe('#showMoreResults', () => {
+    it('dispatches #updateCategoryFacetNumberOfResults is there are no nested values', () => {
+      categoryFacet.showMoreValues();
+      const action = updateCategoryFacetNumberOfValues({
+        facetId,
+        numberOfValues: 10,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #updateCategoryFacetNestedNumberOfValues is there are nested values', () => {
+      const values = [buildMockCategoryFacetValue({state: 'selected'})];
+      const response = buildMockCategoryFacetResponse({facetId, values});
+      state.search.response.facets = [response];
+      initCategoryFacet();
+
+      const action = updateCategoryFacetNestedNumberOfValues({
+        facetId,
+        increment: 5,
+      });
+      categoryFacet.showMoreValues();
+      expect(engine.actions).toContainEqual(action);
     });
   });
 

@@ -109,7 +109,7 @@ export const categoryFacetSetReducer = createReducer(
         while (value.children.length) {
           value = value.children[0];
         }
-
+        console.log(value?.retrieveCount, increment);
         value.retrieveCount += increment;
       });
   }
