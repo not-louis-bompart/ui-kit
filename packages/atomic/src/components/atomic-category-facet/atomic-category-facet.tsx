@@ -129,6 +129,17 @@ export class AtomicCategoryFacet {
     );
   }
 
+  private get showLess() {
+    if (!this.state.canShowLessValues) {
+      return null;
+    }
+    return (
+      <button onClick={() => this.categoryFacet.showLessValues()}>
+        Show Less
+      </button>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -141,6 +152,7 @@ export class AtomicCategoryFacet {
           <div>{this.parents}</div>
           <div>{this.values}</div>
           <div>{this.showMore}</div>
+          <div>{this.showLess}</div>
         </div>
       </div>
     );

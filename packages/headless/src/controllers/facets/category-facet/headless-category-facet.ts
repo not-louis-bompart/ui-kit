@@ -130,6 +130,29 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       }
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },
+
+    /**
+     * Displays less values for the current selected category if possible
+     */
+    showLessValues() {
+      const {facetId, numberOfValues: increment} = options;
+      const request = getRequest();
+
+      const {parents} = this.state;
+      if (parents.length === 0) {
+        const numberOfValues = request.numberOfValues - increment;
+        dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
+      } else {
+        dispatch(
+          updateCategoryFacetNestedNumberOfValues({
+            facetId,
+            increment: 0 - increment,
+          })
+        );
+      }
+      dispatch(executeSearch(logFacetShowMore(facetId)));
+    },
+
     /**  @returns The state of the `CategoryFacet` controller.*/
     get state() {
       const request = getRequest();
@@ -142,12 +165,16 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
         parents.length > 0
           ? parents[parents.length - 1].moreValuesAvailable
           : response?.moreValuesAvailable || false;
+
+      const canShowLessValues = values.length > options.numberOfValues;
+
       return {
         parents,
         values,
         isLoading,
         hasActiveValues,
         canShowMoreValues,
+        canShowLessValues,
         sortCriteria: request.sortCriteria,
       };
     },
