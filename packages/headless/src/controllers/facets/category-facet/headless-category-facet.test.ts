@@ -209,51 +209,85 @@ describe('category facet', () => {
   });
 
   describe('#state.hasMoreValues', () => {
-    it('if currentValues is empty, hasMoreValues is false', () => {
-      expect(categoryFacet.state.hasMoreValues).toBe(false);
-    });
+    describe('when currentValues is Empty (nothing is selected)', () => {
+      it('if #moreValuesAvailable is true #state.canShowMoreValues is true', () => {
+        const response = buildMockCategoryFacetResponse({
+          facetId,
+          moreValuesAvailable: true,
+        });
+        state.search.response.facets = [response];
 
-    it('if currentValues has a value with no children and moreResponseAvailable is true, hasMoreValues is true', () => {
-      const response = buildMockCategoryFacetResponse({
-        facetId,
-        moreValuesAvailable: true,
+        expect(categoryFacet.state.canShowMoreValues).toBe(true);
       });
-      state.search.response.facets = [response];
 
-      expect(categoryFacet.state.hasMoreValues).toBe(true);
+      it('if #moreValuesAvailable is false #state.canShowMoreValues is false', () => {
+        const response = buildMockCategoryFacetResponse({
+          facetId,
+          moreValuesAvailable: false,
+        });
+        state.search.response.facets = [response];
+
+        expect(categoryFacet.state.canShowMoreValues).toBe(false);
+      });
     });
 
-    it('if currentValues has a value with 1 child', () => {
-      const values = [
-        buildMockCategoryFacetValue({
+    describe('when a value in currentValue is selected (top level value selected)', () => {
+      it('if #moreValuesAvailable is true, #state.canShowMore is true', () => {
+        const values = [
+          buildMockCategoryFacetValue({
+            numberOfResults: 10,
+            state: 'selected',
+            moreValuesAvailable: true,
+          }),
+        ];
+        const response = buildMockCategoryFacetResponse({
+          facetId,
+          values,
+          moreValuesAvailable: false,
+        });
+
+        state.search.response.facets = [response];
+        expect(categoryFacet.state.canShowMoreValues).toBe(true);
+      });
+
+      it('if #moreValuesAvailable is true, #state.canShowMore is true', () => {
+        const values = [
+          buildMockCategoryFacetValue({
+            numberOfResults: 10,
+            state: 'selected',
+            moreValuesAvailable: false,
+          }),
+        ];
+        const response = buildMockCategoryFacetResponse({
+          facetId,
+          values,
+          moreValuesAvailable: true,
+        });
+
+        state.search.response.facets = [response];
+        expect(categoryFacet.state.canShowMoreValues).toBe(false);
+      });
+    });
+
+    describe('when a nested value (currentValues[n].children[n]) is selected', () => {
+      it('if currentValues has a value with more than 1 child', () => {
+        const nestedChild = buildMockCategoryFacetValue({
           numberOfResults: 10,
           state: 'selected',
           moreValuesAvailable: true,
-        }),
-      ];
-      const response = buildMockCategoryFacetResponse({facetId, values});
+        });
+        const values = [
+          buildMockCategoryFacetValue({
+            numberOfResults: 10,
+            moreValuesAvailable: false,
+            children: [nestedChild],
+          }),
+        ];
+        const response = buildMockCategoryFacetResponse({facetId, values});
 
-      state.search.response.facets = [response];
-      expect(categoryFacet.state.hasMoreValues).toBe(true);
-    });
-
-    it('if currentValues has a value with more than 1 child', () => {
-      const nestedChild = buildMockCategoryFacetValue({
-        numberOfResults: 10,
-        state: 'selected',
-        moreValuesAvailable: true,
+        state.search.response.facets = [response];
+        expect(categoryFacet.state.canShowMoreValues).toBe(true);
       });
-      const values = [
-        buildMockCategoryFacetValue({
-          numberOfResults: 10,
-          moreValuesAvailable: false,
-          children: [nestedChild],
-        }),
-      ];
-      const response = buildMockCategoryFacetResponse({facetId, values});
-
-      state.search.response.facets = [response];
-      expect(categoryFacet.state.hasMoreValues).toBe(true);
     });
   });
 
@@ -275,7 +309,7 @@ describe('category facet', () => {
 
       const action = updateCategoryFacetNestedNumberOfValues({
         facetId,
-        increment: 5,
+        numberOfValues: 5,
       });
       categoryFacet.showMoreValues();
       expect(engine.actions).toContainEqual(action);

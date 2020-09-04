@@ -31,7 +31,7 @@ export const updateCategoryFacetNumberOfValues = updateFacetNumberOfValues;
 
 export const updateCategoryFacetNestedNumberOfValues = createAction<{
   facetId: string;
-  increment: number;
+  numberOfValues: number;
 }>('categoryFacet/updateNestedNumberOfValues');
 
 /**

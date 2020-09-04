@@ -144,7 +144,7 @@ describe('category facet slice', () => {
     });
     const finalState = categoryFacetSetReducer(
       state,
-      updateCategoryFacetNestedNumberOfValues({facetId, increment: 5})
+      updateCategoryFacetNestedNumberOfValues({facetId, numberOfValues: 10})
     );
     expect(finalState[facetId].currentValues[0].retrieveCount).toBe(10);
   });
@@ -153,7 +153,7 @@ describe('category facet slice', () => {
     state[facetId] = buildMockCategoryFacetRequest();
     const finalState = categoryFacetSetReducer(
       state,
-      updateCategoryFacetNestedNumberOfValues({facetId, increment: 5})
+      updateCategoryFacetNestedNumberOfValues({facetId, numberOfValues: 10})
     );
     expect(finalState).toBe(state);
   });

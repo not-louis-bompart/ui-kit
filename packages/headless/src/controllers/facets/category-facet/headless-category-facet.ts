@@ -121,12 +121,15 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       const {facetId, numberOfValues: increment} = options;
       const request = getRequest();
 
-      const {parents} = this.state;
+      const {parents, values} = this.state;
       if (parents.length === 0) {
         const numberOfValues = request.numberOfValues + increment;
         dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
       } else {
-        dispatch(updateCategoryFacetNestedNumberOfValues({facetId, increment}));
+        const numberOfValues = values.length + increment;
+        dispatch(
+          updateCategoryFacetNestedNumberOfValues({facetId, numberOfValues})
+        );
       }
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },

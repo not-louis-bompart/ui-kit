@@ -100,17 +100,19 @@ export const categoryFacetSetReducer = createReducer(
         );
       })
       .addCase(updateCategoryFacetNestedNumberOfValues, (state, action) => {
-        const {facetId, increment} = action.payload;
-        let value = state[facetId]?.currentValues[0];
-        if (!value) {
+        const {facetId, numberOfValues} = action.payload;
+        let selectedValue = state[facetId]?.currentValues[0];
+        if (!selectedValue) {
           return;
         }
 
-        while (value.children.length) {
-          value = value.children[0];
+        while (
+          selectedValue.children.length &&
+          selectedValue?.state !== 'selected'
+        ) {
+          selectedValue = selectedValue.children[0];
         }
-        console.log(value?.retrieveCount, increment);
-        value.retrieveCount += increment;
+        selectedValue.retrieveCount = numberOfValues;
       });
   }
 );
