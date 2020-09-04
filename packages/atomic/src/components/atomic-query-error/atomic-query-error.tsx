@@ -4,8 +4,9 @@ import {
   QueryErrorState,
   Unsubscribe,
   buildQueryError,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-query-error',
@@ -13,12 +14,15 @@ import {headlessEngine} from '../../engine';
   shadow: true,
 })
 export class AtomicQueryError {
-  private queryError: QueryError;
-  private unsubscribe: Unsubscribe;
   @State() state!: QueryErrorState;
 
-  constructor() {
-    this.queryError = buildQueryError(headlessEngine);
+  private engine!: Engine;
+  private queryError!: QueryError;
+  private unsubscribe: Unsubscribe = () => {};
+
+  @Initialization()
+  public initialize() {
+    this.queryError = buildQueryError(this.engine);
     this.unsubscribe = this.queryError.subscribe(() => this.updateState());
   }
 

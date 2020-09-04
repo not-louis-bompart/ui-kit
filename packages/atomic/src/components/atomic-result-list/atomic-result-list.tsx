@@ -5,10 +5,11 @@ import {
   Unsubscribe,
   ResultTemplatesManager,
   buildResultList,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-result-list',
@@ -17,20 +18,20 @@ import defaultTemplate from '../../templates/default.html';
 })
 export class AtomicResultList {
   @Element() host!: HTMLDivElement;
-  private resultList: ResultList;
-  private unsubscribe: Unsubscribe;
-  private resultTemplatesManager = new ResultTemplatesManager<string>(
-    headlessEngine
-  );
-
   @State() state!: ResultListState;
+  private engine!: Engine;
+  private unsubscribe: Unsubscribe = () => {};
+  private resultList!: ResultList;
+  private resultTemplatesManager!: ResultTemplatesManager<string>;
 
-  constructor() {
-    this.resultList = buildResultList(headlessEngine);
+  @Initialization()
+  public initialize() {
+    this.resultTemplatesManager = new ResultTemplatesManager<string>(
+      this.engine
+    );
+    this.resultList = buildResultList(this.engine);
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
-  }
 
-  public componentWillLoad() {
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
   }
@@ -70,6 +71,7 @@ export class AtomicResultList {
     return this.state.results.map((result) => (
       <atomic-result
         result={result}
+        engine={this.engine}
         innerHTML={Mustache.render(
           this.resultTemplatesManager.selectTemplate(result) || '',
           result

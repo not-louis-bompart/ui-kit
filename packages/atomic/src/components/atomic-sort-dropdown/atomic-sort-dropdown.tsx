@@ -8,8 +8,9 @@ import {
   buildFieldSortCriterion,
   Unsubscribe,
   buildSort,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {Initialization} from '../../utils/initialization-utils';
 
 enum SortOption {
   Relevance = 'relevance',
@@ -26,12 +27,14 @@ enum SortOption {
 export class AtomicSortDropdown {
   @State() state!: SortState;
 
-  private sort: Sort;
-  private unsubscribe: Unsubscribe;
+  private engine!: Engine;
+  private sort!: Sort;
+  private unsubscribe: Unsubscribe = () => {};
 
-  constructor() {
+  @Initialization()
+  public initialize() {
     const initialState: Partial<SortInitialState> = {criterion: this.relevance};
-    this.sort = buildSort(headlessEngine, {initialState});
+    this.sort = buildSort(this.engine, {initialState});
     this.unsubscribe = this.sort.subscribe(() => this.updateState());
   }
 

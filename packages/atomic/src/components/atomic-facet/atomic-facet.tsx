@@ -7,8 +7,9 @@ import {
   Unsubscribe,
   FacetOptions,
   FacetSortCriterion,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-facet',
@@ -19,13 +20,15 @@ export class AtomicFacet {
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: FacetState;
+  private engine!: Engine;
 
-  private facet: Facet;
-  private unsubscribe: Unsubscribe;
+  private unsubscribe: Unsubscribe = () => {};
+  private facet!: Facet;
 
-  constructor() {
+  @Initialization()
+  public initialize() {
     const options: FacetOptions = {field: this.field};
-    this.facet = buildFacet(headlessEngine, {options});
+    this.facet = buildFacet(this.engine, {options});
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
   }
 

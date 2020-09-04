@@ -1,22 +1,27 @@
 import {Component, h, State} from '@stencil/core';
-import {headlessEngine} from '../../engine';
 import {
   History,
   HistoryState,
   Unsubscribe,
   buildHistory,
+  Engine,
 } from '@coveo/headless';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-history',
   shadow: true,
 })
 export class AtomicHistory {
-  private history: History;
-  private unsubscribe: Unsubscribe;
   @State() state!: HistoryState;
-  constructor() {
-    this.history = buildHistory(headlessEngine);
+
+  private engine!: Engine;
+  private history!: History;
+  private unsubscribe: Unsubscribe = () => {};
+
+  @Initialization()
+  public initialize() {
+    this.history = buildHistory(this.engine);
     this.unsubscribe = this.history.subscribe(() => this.updateState());
   }
 

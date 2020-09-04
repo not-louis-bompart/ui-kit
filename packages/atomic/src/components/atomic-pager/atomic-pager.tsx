@@ -1,6 +1,12 @@
 import {Component, h, State} from '@stencil/core';
-import {Pager, PagerState, Unsubscribe, buildPager} from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {
+  Pager,
+  PagerState,
+  Unsubscribe,
+  buildPager,
+  Engine,
+} from '@coveo/headless';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-pager',
@@ -8,12 +14,15 @@ import {headlessEngine} from '../../engine';
   shadow: true,
 })
 export class AtomicPager {
-  private pager: Pager;
-  private unsubscribe: Unsubscribe;
   @State() state!: PagerState;
 
-  constructor() {
-    this.pager = buildPager(headlessEngine);
+  private engine!: Engine;
+  private pager!: Pager;
+  private unsubscribe: Unsubscribe = () => {};
+
+  @Initialization()
+  public initialize() {
+    this.pager = buildPager(this.engine);
     this.unsubscribe = this.pager.subscribe(() => this.updateState());
   }
 

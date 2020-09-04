@@ -6,7 +6,7 @@ import {
   buildSearchBox,
   Engine,
 } from '@coveo/headless';
-import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-search-box',
@@ -14,30 +14,16 @@ import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
   shadow: true,
 })
 export class AtomicSearchBox implements ComponentInterface {
-  @Prop() isStandalone = false;
-
-  @Prop() numberOfSuggestions = 5;
-  @EngineProvider() engine!: Engine;
-
   @State() searchBoxState!: SearchBoxState;
+  @Prop() isStandalone = false;
+  @Prop() numberOfSuggestions = 5;
 
-  private error?: Error;
+  private engine!: Engine;
   private searchBox!: SearchBox;
-  private unsubscribe?: Unsubscribe;
+  private unsubscribe: Unsubscribe = () => {};
 
-  public componentWillLoad() {
-    try {
-      this.configure();
-    } catch (error) {
-      this.error = error;
-    }
-  }
-
-  private configure() {
-    if (!this.engine) {
-      throw new EngineProviderError('atomic-search-box');
-    }
-
+  @Initialization()
+  public initialize() {
     this.searchBox = buildSearchBox(this.engine, {
       options: {
         isStandalone: this.isStandalone,
@@ -54,7 +40,7 @@ export class AtomicSearchBox implements ComponentInterface {
   }
 
   public disconnectedCallback() {
-    this.unsubscribe && this.unsubscribe();
+    this.unsubscribe();
   }
 
   private updateState() {
@@ -86,12 +72,6 @@ export class AtomicSearchBox implements ComponentInterface {
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
-
     return (
       <div>
         <input

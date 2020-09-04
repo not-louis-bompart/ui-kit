@@ -4,8 +4,9 @@ import {
   DidYouMeanState,
   Unsubscribe,
   buildDidYouMean,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-did-you-mean',
@@ -13,12 +14,15 @@ import {headlessEngine} from '../../engine';
   shadow: true,
 })
 export class AtomicDidYouMean {
-  private didYouMean: DidYouMean;
-  private unsubscribe: Unsubscribe;
   @State() state!: DidYouMeanState;
 
-  constructor() {
-    this.didYouMean = buildDidYouMean(headlessEngine);
+  private engine!: Engine;
+  private didYouMean!: DidYouMean;
+  private unsubscribe: Unsubscribe = () => {};
+
+  @Initialization()
+  public initialize() {
+    this.didYouMean = buildDidYouMean(this.engine);
     this.unsubscribe = this.didYouMean.subscribe(() => this.updateState());
   }
 

@@ -8,8 +8,9 @@ import {
   NumericFacetValue,
   RangeFacetSortCriterion,
   Unsubscribe,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-numeric-facet',
@@ -21,10 +22,12 @@ export class AtomicNumericFacet {
   @Prop() label = 'No label';
   @State() state!: NumericFacetState;
 
-  private facet: NumericFacet;
-  private unsubscribe: Unsubscribe;
+  private engine!: Engine;
+  private unsubscribe: Unsubscribe = () => {};
+  private facet!: NumericFacet;
 
-  constructor() {
+  @Initialization()
+  public initialize() {
     const options: NumericFacetOptions = {
       field: this.field,
       generateAutomaticRanges: false,
@@ -37,7 +40,7 @@ export class AtomicNumericFacet {
       ],
     };
 
-    this.facet = buildNumericFacet(headlessEngine, {options});
+    this.facet = buildNumericFacet(this.engine, {options});
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
   }
 

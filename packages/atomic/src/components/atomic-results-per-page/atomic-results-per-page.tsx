@@ -4,8 +4,9 @@ import {
   ResultsPerPageState,
   Unsubscribe,
   buildResultsPerPage,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-results-per-page',
@@ -13,12 +14,15 @@ import {headlessEngine} from '../../engine';
   shadow: true,
 })
 export class AtomicResultsPerPage {
-  private resultsPerPage: ResultsPerPage;
-  private unsubscribe: Unsubscribe;
   @State() state!: ResultsPerPageState;
 
-  constructor() {
-    this.resultsPerPage = buildResultsPerPage(headlessEngine);
+  private engine!: Engine;
+  private resultsPerPage!: ResultsPerPage;
+  private unsubscribe: Unsubscribe = () => {};
+
+  @Initialization()
+  public initialize() {
+    this.resultsPerPage = buildResultsPerPage(this.engine);
     this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());
   }
 

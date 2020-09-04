@@ -1,11 +1,15 @@
-import {Component, Prop, h} from '@stencil/core';
+import {Component, Prop, h, Listen} from '@stencil/core';
 import {
   HeadlessEngine,
   searchPageReducers,
   Engine,
   HeadlessConfigurationOptions,
+  SearchActions,
+  AnalyticsActions,
 } from '@coveo/headless';
 import {Schema, StringValue} from '@coveo/bueno';
+import {RenderError} from '../../utils/render-utils';
+import {InitializeEvent} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-search-interface',
@@ -16,12 +20,29 @@ export class AtomicSearchInterface {
   @Prop() organizationId?: string;
   @Prop() accessToken?: string;
   @Prop() renewAccessToken?: () => Promise<string>;
+  @RenderError() error?: Error;
 
-  @Prop() engine?: Engine;
-
-  private error?: Error;
+  private engine?: Engine;
+  private hangingComponentsInitialization: InitializeEvent[] = [];
 
   constructor() {
+    // TODO: Initialize only when accessToken is available
+    this.initialize();
+  }
+
+  @Listen('atomic/initializeComponent')
+  handleInitialization(event: InitializeEvent) {
+    event.stopPropagation();
+
+    if (this.engine) {
+      event.detail(this.engine);
+      return;
+    }
+
+    this.hangingComponentsInitialization.push(event);
+  }
+
+  private initialize() {
     const config = this.configuration;
     if (!config) {
       this.error = new Error(
@@ -34,9 +55,23 @@ export class AtomicSearchInterface {
       configuration: config,
       reducers: searchPageReducers,
     });
+
+    this.initializeComponents();
+
+    this.engine!.dispatch(
+      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+    );
   }
 
-  get configuration(): HeadlessConfigurationOptions | null {
+  private initializeComponents() {
+    this.hangingComponentsInitialization.forEach((event) =>
+      event.detail(this.engine!)
+    );
+
+    this.hangingComponentsInitialization = [];
+  }
+
+  private get configuration(): HeadlessConfigurationOptions | null {
     if (this.sample) {
       if (this.organizationId || this.accessToken) {
         console.warn(
@@ -67,13 +102,7 @@ export class AtomicSearchInterface {
     };
   }
 
-  render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
-
+  public render() {
     return <slot></slot>;
   }
 }

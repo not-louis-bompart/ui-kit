@@ -4,51 +4,54 @@
         "baseUrl": ".",
         "target": "es2016",
         "paths": {
-          "c/dateFacet": [
-            "dateFacet/dateFacet.js"
-          ],
-          "c/dateFacetValue": [
-            "dateFacetValue/dateFacetValue.js"
-          ],
-          "c/facet": [
-            "facet/facet.js"
-          ],
-          "c/pager": [
-            "pager/pager.js"
-          ],
-          "c/result": [
-            "result/result.js"
-          ],
-          "c/resultList": [
-            "resultList/resultList.js"
-          ],
-          "c/sort": [
-            "sort/sort.js"
-          ],
-          "c/summary": [
-            "summary/summary.js"
-          ],
-          "c/facetValue": [
-            "facetValue/facetValue.js"
-          ],
-          "c/numberButton": [
-            "numberButton/numberButton.js"
-          ],
-          "c/numericFacet": [
-            "numericFacet/numericFacet.js"
-          ],
-          "c/numericFacetValue": [
-            "numericFacetValue/numericFacetValue.js"
-          ],
-          "c/resultsPerPage": [
-            "resultsPerPage/resultsPerPage.js"
-          ],
-          "c/searchBox": [
-            "searchBox/searchBox.js"
-          ],
-          "c/searchPage": [
-            "searchPage/searchPage.js"
-          ]
+            "c/dateFacet": [
+                "dateFacet/dateFacet.js"
+            ],
+            "c/dateFacetValue": [
+                "dateFacetValue/dateFacetValue.js"
+            ],
+            "c/facet": [
+                "facet/facet.js"
+            ],
+            "c/pager": [
+                "pager/pager.js"
+            ],
+            "c/result": [
+                "result/result.js"
+            ],
+            "c/resultList": [
+                "resultList/resultList.js"
+            ],
+            "c/sort": [
+                "sort/sort.js"
+            ],
+            "c/summary": [
+                "summary/summary.js"
+            ],
+            "c/facetValue": [
+                "facetValue/facetValue.js"
+            ],
+            "c/numericFacet": [
+                "numericFacet/numericFacet.js"
+            ],
+            "c/numericFacetValue": [
+                "numericFacetValue/numericFacetValue.js"
+            ],
+            "c/resultsPerPage": [
+                "resultsPerPage/resultsPerPage.js"
+            ],
+            "c/searchBox": [
+                "searchBox/searchBox.js"
+            ],
+            "c/searchInterface": [
+                "searchInterface/searchInterface.js"
+            ],
+            "c/numberButton": [
+                "numberButton/numberButton.js"
+            ],
+            "c/initialization": [
+                "c/initialization.js"
+            ]
         }
     },
     "include": [
@@ -59,6 +62,11 @@
     "typeAcquisition": {
         "include": [
             "jest"
+        ]
+    },
+    "paths": {
+        "c/*": [
+            "*"
         ]
     }
 }
