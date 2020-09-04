@@ -8,7 +8,6 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
-  updateCategoryFacetNestedNumberOfValues,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {facetSelector} from '../../../features/facets/facet-set/facet-set-selectors';
 import {
@@ -122,15 +121,11 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       const request = getRequest();
 
       const {parents, values} = this.state;
-      if (parents.length === 0) {
-        const numberOfValues = request.numberOfValues + increment;
-        dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      } else {
-        const numberOfValues = values.length + increment;
-        dispatch(
-          updateCategoryFacetNestedNumberOfValues({facetId, numberOfValues})
-        );
-      }
+      const numberOfValues =
+        parents.length === 0
+          ? request.numberOfValues + increment
+          : values.length + increment;
+      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },
     /**  @returns The state of the `CategoryFacet` controller.*/

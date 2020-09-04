@@ -11,7 +11,6 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
-  updateCategoryFacetNestedNumberOfValues,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
@@ -292,7 +291,7 @@ describe('category facet', () => {
   });
 
   describe('#showMoreResults', () => {
-    it('dispatches #updateCategoryFacetNumberOfResults is there are no nested values', () => {
+    it('dispatches #updateCategoryFacetNumberOfResults is there are no nested values with the correct numberOfValues', () => {
       categoryFacet.showMoreValues();
       const action = updateCategoryFacetNumberOfValues({
         facetId,
@@ -301,15 +300,21 @@ describe('category facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('dispatches #updateCategoryFacetNestedNumberOfValues is there are nested values', () => {
-      const values = [buildMockCategoryFacetValue({state: 'selected'})];
+    it('dispatches #updateCategoryFacetNestedNumberOfValues is there are nested values with the correct numberOfValues', () => {
+      const nestedChildren = [buildMockCategoryFacetValue()];
+      const values = [
+        buildMockCategoryFacetValue({
+          state: 'selected',
+          children: nestedChildren,
+        }),
+      ];
       const response = buildMockCategoryFacetResponse({facetId, values});
       state.search.response.facets = [response];
       initCategoryFacet();
 
-      const action = updateCategoryFacetNestedNumberOfValues({
+      const action = updateCategoryFacetNumberOfValues({
         facetId,
-        numberOfValues: 5,
+        numberOfValues: 6,
       });
       categoryFacet.showMoreValues();
       expect(engine.actions).toContainEqual(action);
