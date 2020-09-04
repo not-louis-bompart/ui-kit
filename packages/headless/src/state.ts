@@ -58,7 +58,7 @@ export interface ConstantQueryState {
   /**
    * Represents whether the query has been updated once yet.
    */
-  isRegistered: boolean;
+  isInitialized: boolean;
 }
 
 export interface RedirectionState {

@@ -4,10 +4,11 @@ import {
   registerConstantQuery,
   updateConstantQuery,
 } from './constant-query-actions';
+import {change} from '../history/history-actions';
 
 export const getInitialConstantQueryState: () => ConstantQueryState = () => ({
   cq: '',
-  isRegistered: false,
+  isInitialized: false,
 });
 
 export const constantQueryReducer = createReducer(
@@ -16,12 +17,16 @@ export const constantQueryReducer = createReducer(
     builder
       .addCase(registerConstantQuery, (state, action) => {
         const cq = action.payload;
-        if (state.cq === '' && !state.isRegistered) {
+        if (!state.isInitialized) {
           state.cq = cq;
+          state.isInitialized = true;
         }
       })
       .addCase(updateConstantQuery, (state, action) => {
         state.cq = action.payload;
+      })
+      .addCase(change.fulfilled, (_, action) => {
+        return action.payload.constantQuery;
       });
   }
 );

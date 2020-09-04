@@ -1,9 +1,6 @@
 import {Engine} from '../../app/headless-engine';
 import {buildController} from '../controller/headless-controller';
-import {
-  registerConstantQuery,
-  updateConstantQuery,
-} from '../../features/constant-query/constant-query-actions';
+import {updateConstantQuery} from '../../features/constant-query/constant-query-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceChange} from '../../features/analytics/analytics-actions';
 
@@ -24,9 +21,8 @@ export function buildTab(engine: Engine, props: TabProps) {
   const {dispatch} = engine;
   const initConstantQuery = () => {
     if (props.initialState.isActive) {
-      return dispatch(updateConstantQuery(props.expression));
+      dispatch(updateConstantQuery(props.expression));
     }
-    return dispatch(registerConstantQuery(props.expression));
   };
   initConstantQuery();
 
