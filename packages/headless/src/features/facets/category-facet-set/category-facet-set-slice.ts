@@ -101,7 +101,6 @@ export const categoryFacetSetReducer = createReducer(
             action.payload
           );
         }
-        console.log('hello');
         handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);
       });
   }
