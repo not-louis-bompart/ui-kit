@@ -29,11 +29,6 @@ export const deselectAllCategoryFacetValues = deselectAllFacetValues;
 /** Updates the number of values of a category facet. */
 export const updateCategoryFacetNumberOfValues = updateFacetNumberOfValues;
 
-export const updateCategoryFacetNestedNumberOfValues = createAction<{
-  facetId: string;
-  increment: number;
-}>('categoryFacet/updateNestedNumberOfValues');
-
 /**
  * Updates the the sort criterion for the category facet
  */

@@ -10,7 +10,6 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
-  updateCategoryFacetNestedNumberOfValues,
 } from './category-facet-set-actions';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {getHistoryEmptyState} from '../../history/history-slice';
@@ -117,8 +116,9 @@ describe('category facet slice', () => {
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #updateCategoryFacetNumberOfValues calls #handleFacetUpdateNumberOfValues', () => {
+  it('dispatching #updateCategoryFacetNumberOfValues calls #handleFacetUpdateNumberOfValues if there are no nested children', () => {
     jest.spyOn(FacetReducers, 'handleFacetUpdateNumberOfValues');
+    state[facetId] = buildMockCategoryFacetRequest({facetId});
     categoryFacetSetReducer(
       state,
       updateCategoryFacetNumberOfValues({
@@ -132,7 +132,7 @@ describe('category facet slice', () => {
     );
   });
 
-  it('dispatching #updateCategoryFacetNestedNumberOfValues sets nested value', () => {
+  it('dispatching #updateCategoryFacetNumberOfValues sets correct retrieve count to the appropriate number', () => {
     state[facetId] = buildMockCategoryFacetRequest({
       currentValues: [
         buildMockCategoryFacetValueRequest({
@@ -144,18 +144,9 @@ describe('category facet slice', () => {
     });
     const finalState = categoryFacetSetReducer(
       state,
-      updateCategoryFacetNestedNumberOfValues({facetId, increment: 5})
+      updateCategoryFacetNumberOfValues({facetId, numberOfValues: 10})
     );
     expect(finalState[facetId].currentValues[0].retrieveCount).toBe(10);
-  });
-
-  it('dispatching #updateCategoryFacetNestedNumberOfValues does nothing if there are no nested values', () => {
-    state[facetId] = buildMockCategoryFacetRequest();
-    const finalState = categoryFacetSetReducer(
-      state,
-      updateCategoryFacetNestedNumberOfValues({facetId, increment: 5})
-    );
-    expect(finalState).toBe(state);
   });
 
   describe('#toggleSelectCategoryFacetValue', () => {
