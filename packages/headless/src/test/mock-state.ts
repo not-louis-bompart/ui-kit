@@ -9,7 +9,6 @@ import {getSortCriteriaInitialState} from '../features/sort-criteria/sort-criter
 import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-slice';
 import {getContextInitialState} from '../features/context/context-slice';
 import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-slice';
-import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/facet-search-set-slice';
 import {getDateFacetSetInitialState} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {getNumericFacetSetInitialState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {getFieldsInitialState} from '../features/fields/fields-slice';
@@ -19,6 +18,8 @@ import {makeHistory} from '../app/undoable';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-slice';
 import {getCategoryFacetSetInitialState} from '../features/facets/category-facet-set/category-facet-set-slice';
 import {getInitialConstantQueryState} from '../features/constant-query/constant-query-slice';
+import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+import {getCategoryFacetSearchSetInitialState} from '../features/facets/facet-search-set/category/category-facet-search-set-slice';
 
 export function createMockState(
   config: Partial<SearchPageState> = {}
@@ -31,6 +32,7 @@ export function createMockState(
     numericFacetSet: getNumericFacetSetInitialState(),
     categoryFacetSet: getCategoryFacetSetInitialState(),
     facetSearchSet: getFacetSearchSetInitialState(),
+    categoryFacetSearchSet: getCategoryFacetSearchSetInitialState(),
     pagination: getPaginationInitialState(),
     query: getQueryInitialState(),
     querySet: getQuerySetInitialState(),
