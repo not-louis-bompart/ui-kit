@@ -150,15 +150,6 @@ describe('category facet slice', () => {
     expect(finalState[facetId].currentValues[0].retrieveCount).toBe(10);
   });
 
-  it('dispatching #updateCategoryFacetNestedNumberOfValues does nothing if there are no nested values', () => {
-    state[facetId] = buildMockCategoryFacetRequest();
-    const finalState = categoryFacetSetReducer(
-      state,
-      updateCategoryFacetNestedNumberOfValues({facetId, numberOfValues: 10})
-    );
-    expect(finalState).toBe(state);
-  });
-
   describe('#toggleSelectCategoryFacetValue', () => {
     it('when the passed id is not registered, it does not throw', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
