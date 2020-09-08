@@ -1,6 +1,13 @@
 import {Component, h, Prop, State} from '@stencil/core';
-import {buildTab, Tab, TabProps, TabState, Unsubscribe} from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {
+  buildTab,
+  Engine,
+  Tab,
+  TabProps,
+  TabState,
+  Unsubscribe,
+} from '@coveo/headless';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-tab',
@@ -12,17 +19,19 @@ export class AtomicTab {
   @Prop() isActive = false;
   @State() state!: TabState;
 
-  private tab: Tab;
-  private unsubscribe: Unsubscribe;
+  private engine!: Engine;
+  private tab!: Tab;
+  private unsubscribe: Unsubscribe = () => {};
 
-  constructor() {
+  @Initialization()
+  public initialize() {
     const options: TabProps = {
       expression: this.expression,
       initialState: {
         isActive: this.isActive,
       },
     };
-    this.tab = buildTab(headlessEngine, options);
+    this.tab = buildTab(this.engine, options);
     this.unsubscribe = this.tab.subscribe(this.updateState);
   }
 

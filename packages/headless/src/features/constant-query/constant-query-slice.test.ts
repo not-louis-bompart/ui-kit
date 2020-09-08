@@ -23,23 +23,19 @@ describe('constant query slice', () => {
     expect(state.cq).toEqual(cq);
   });
 
-  it('#registerConstantQuery updates cq if it is empty && isRegistered is false', () => {
+  it('#registerConstantQuery updates cq and isInitialized if isInitialized is false', () => {
     const action = registerConstantQuery(cq);
     state = constantQueryReducer(state, action);
-
-    expect(state.cq).toEqual(cq);
+    const finalState: ConstantQueryState = {
+      isInitialized: true,
+      cq,
+    };
+    expect(state).toEqual(finalState);
   });
 
-  it('#registerConstantQuery does nothing if cq is not empty', () => {
-    state.cq = 'world';
+  it('#registerConstantQuery does nothing if isInitialized is true', () => {
     const action = registerConstantQuery(cq);
-    state = constantQueryReducer(state, action);
-
-    expect(state.cq).not.toEqual(cq);
-  });
-
-  it('#registerConstantQuery does nothing if cq is empty but isRegisted is true', () => {
-    const action = registerConstantQuery(cq);
+    state.isInitialized = true;
     state = constantQueryReducer(state, action);
 
     expect(state.cq).not.toEqual(cq);

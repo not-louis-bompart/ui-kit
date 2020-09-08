@@ -37,7 +37,9 @@ export function buildTab(engine: Engine, props: TabProps) {
     },
 
     get state() {
-      const isActive = engine.state.constantQuery.cq === props.expression;
+      const isActive =
+        engine.state.constantQuery.cq === props.expression &&
+        engine.state.constantQuery.isInitialized;
       return {isActive};
     },
   };

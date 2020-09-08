@@ -11,8 +11,6 @@ export namespace Components {
         "field": string;
         "label": string;
     }
-    interface AtomicChild {
-    }
     interface AtomicComponentError {
         "error": Error;
     }
@@ -72,6 +70,10 @@ export namespace Components {
     }
     interface AtomicSortDropdown {
     }
+    interface AtomicTab {
+        "expression": string;
+        "isActive": boolean;
+    }
 }
 declare global {
     interface HTMLAtomicCategoryFacetElement extends Components.AtomicCategoryFacet, HTMLStencilElement {
@@ -79,12 +81,6 @@ declare global {
     var HTMLAtomicCategoryFacetElement: {
         prototype: HTMLAtomicCategoryFacetElement;
         new (): HTMLAtomicCategoryFacetElement;
-    };
-    interface HTMLAtomicChildElement extends Components.AtomicChild, HTMLStencilElement {
-    }
-    var HTMLAtomicChildElement: {
-        prototype: HTMLAtomicChildElement;
-        new (): HTMLAtomicChildElement;
     };
     interface HTMLAtomicComponentErrorElement extends Components.AtomicComponentError, HTMLStencilElement {
     }
@@ -194,9 +190,14 @@ declare global {
         prototype: HTMLAtomicSortDropdownElement;
         new (): HTMLAtomicSortDropdownElement;
     };
+    interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
+    }
+    var HTMLAtomicTabElement: {
+        prototype: HTMLAtomicTabElement;
+        new (): HTMLAtomicTabElement;
+    };
     interface HTMLElementTagNameMap {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
-        "atomic-child": HTMLAtomicChildElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-date-facet": HTMLAtomicDateFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -215,14 +216,13 @@ declare global {
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
+        "atomic-tab": HTMLAtomicTabElement;
     }
 }
 declare namespace LocalJSX {
     interface AtomicCategoryFacet {
         "field"?: string;
         "label"?: string;
-    }
-    interface AtomicChild {
     }
     interface AtomicComponentError {
         "error": Error;
@@ -280,9 +280,12 @@ declare namespace LocalJSX {
     }
     interface AtomicSortDropdown {
     }
+    interface AtomicTab {
+        "expression"?: string;
+        "isActive"?: boolean;
+    }
     interface IntrinsicElements {
         "atomic-category-facet": AtomicCategoryFacet;
-        "atomic-child": AtomicChild;
         "atomic-component-error": AtomicComponentError;
         "atomic-date-facet": AtomicDateFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -301,6 +304,7 @@ declare namespace LocalJSX {
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
+        "atomic-tab": AtomicTab;
     }
 }
 export { LocalJSX as JSX };
@@ -308,7 +312,6 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
-            "atomic-child": LocalJSX.AtomicChild & JSXBase.HTMLAttributes<HTMLAtomicChildElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
@@ -327,6 +330,7 @@ declare module "@stencil/core" {
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
+            "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
         }
     }
 }
