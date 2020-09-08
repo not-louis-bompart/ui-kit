@@ -118,13 +118,9 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
      */
     showMoreValues() {
       const {facetId, numberOfValues: increment} = options;
-      const request = getRequest();
 
-      const {parents, values} = this.state;
-      const numberOfValues =
-        parents.length === 0
-          ? request.numberOfValues + increment
-          : values.length + increment;
+      const {values} = this.state;
+      const numberOfValues = values.length + increment;
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },

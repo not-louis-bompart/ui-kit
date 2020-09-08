@@ -295,12 +295,12 @@ describe('category facet', () => {
       categoryFacet.showMoreValues();
       const action = updateCategoryFacetNumberOfValues({
         facetId,
-        numberOfValues: 10,
+        numberOfValues: 5,
       });
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('dispatches #updateCategoryFacetNestedNumberOfValues is there are nested values with the correct numberOfValues', () => {
+    it('dispatches #updateCategoryFacetNumberOfResults is there are nested values with the correct numberOfValues', () => {
       const nestedChildren = [buildMockCategoryFacetValue()];
       const values = [
         buildMockCategoryFacetValue({

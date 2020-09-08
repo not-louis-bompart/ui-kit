@@ -141,7 +141,7 @@ function convertCategoryFacetValueToRequest(
   };
 }
 
-export function handleCategoryFacetNestedNumberOfValuesUpdate(
+function handleCategoryFacetNestedNumberOfValuesUpdate(
   state: CategoryFacetSetState,
   payload: {facetId: string; numberOfValues: number}
 ) {
