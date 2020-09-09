@@ -12,7 +12,7 @@ import {
   PaginationState,
   getPaginationInitialState,
 } from '../pagination/pagination-slice';
-import {QueryState} from '../../state';
+import {ConstantQueryState, QueryState} from '../../state';
 import {SortState} from '../../controllers/sort/headless-sort';
 import {snapshot} from './history-actions';
 import {getPipelineInitialState} from '../pipeline/pipeline-slice';
@@ -61,6 +61,7 @@ const isEqual = (
 ) => {
   return (
     isContextEqual(current.context, next.context) &&
+    isConstantQueryEqual(current.constantQuery, next.constantQuery) &&
     isFacetsEqual(current.facetSet, next.facetSet) &&
     isDateFacetsEqual(current.dateFacetSet, next.dateFacetSet) &&
     isNumericFacetsEqual(current.numericFacetSet, next.numericFacetSet) &&
@@ -107,3 +108,8 @@ const isSortEqual = (current: SortState, next: SortState) =>
 const isPipelineEqual = (current: string, next: string) => current === next;
 
 const isSearchHubEqual = (current: string, next: string) => current === next;
+
+const isConstantQueryEqual = (
+  current: ConstantQueryState,
+  next: ConstantQueryState
+) => current.cq === next.cq;
