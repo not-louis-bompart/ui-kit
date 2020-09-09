@@ -25,8 +25,6 @@ export const constantQueryReducer = createReducer(
       .addCase(updateConstantQuery, (state, action) => {
         state.cq = action.payload;
       })
-      .addCase(change.fulfilled, (_, action) => {
-        return action.payload.constantQuery;
-      });
+      .addCase(change.fulfilled, (_, action) => action.payload.constantQuery);
   }
 );

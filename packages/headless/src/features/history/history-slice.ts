@@ -102,14 +102,14 @@ const isPaginationEqual = (current: PaginationState, next: PaginationState) =>
 const isQueryEqual = (current: QueryState, next: QueryState) =>
   current.q === next.q;
 
+const isConstantQueryEqual = (
+  current: ConstantQueryState,
+  next: ConstantQueryState
+) => JSON.stringify(current) === JSON.stringify(next);
+
 const isSortEqual = (current: SortState, next: SortState) =>
   current.sortCriteria === next.sortCriteria;
 
 const isPipelineEqual = (current: string, next: string) => current === next;
 
 const isSearchHubEqual = (current: string, next: string) => current === next;
-
-const isConstantQueryEqual = (
-  current: ConstantQueryState,
-  next: ConstantQueryState
-) => current.cq === next.cq;

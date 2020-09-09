@@ -32,24 +32,24 @@ export class AtomicTab {
       },
     };
     this.tab = buildTab(this.engine, options);
-    this.unsubscribe = this.tab.subscribe(this.updateState);
+    this.unsubscribe = this.tab.subscribe(() => this.updateState());
   }
 
   public disconnectedCallback() {
     this.unsubscribe();
   }
 
-  private updateState = () => {
+  private updateState() {
     this.state = this.tab.state;
-  };
+  }
 
-  public handleClick = () => {
+  public handleClick() {
     this.tab.select();
-  };
+  }
 
   render() {
     return (
-      <button class="tab" onClick={this.handleClick}>
+      <button class="tab" onClick={() => this.handleClick()}>
         <span>
           <slot />
         </span>

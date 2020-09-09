@@ -7,6 +7,8 @@ import {
   constantQueryReducer,
   getInitialConstantQueryState,
 } from './constant-query-slice';
+import {getHistoryEmptyState} from '../history/history-slice';
+import {change} from '../history/history-actions';
 
 describe('constant query slice', () => {
   const cq = 'hello';
@@ -39,5 +41,23 @@ describe('constant query slice', () => {
     state = constantQueryReducer(state, action);
 
     expect(state.cq).not.toEqual(cq);
+  });
+
+  it('allows a restore query on history change', () => {
+    const state = getInitialConstantQueryState();
+    const expectedQuery: ConstantQueryState = {
+      cq: 'hello',
+      isInitialized: true,
+    };
+    const historyChange = {
+      ...getHistoryEmptyState(),
+      constantQuery: expectedQuery,
+    };
+
+    const nextState = constantQueryReducer(
+      state,
+      change.fulfilled(historyChange, '')
+    );
+    expect(nextState).toEqual(expectedQuery);
   });
 });
