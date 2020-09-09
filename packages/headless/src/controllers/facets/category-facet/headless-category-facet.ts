@@ -124,6 +124,17 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },
+    /**
+     * Displays less values for the current selected category if they exist
+     */
+    showLessValues() {
+      const {facetId, numberOfValues: increment} = options;
+
+      const {values} = this.state;
+      const numberOfValues = Math.max(0, values.length - increment);
+      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
+      dispatch(executeSearch(logFacetShowMore(facetId)));
+    },
     /**  @returns The state of the `CategoryFacet` controller.*/
     get state() {
       const request = getRequest();
