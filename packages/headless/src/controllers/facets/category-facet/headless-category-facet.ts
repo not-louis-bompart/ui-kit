@@ -22,6 +22,7 @@ import {
   logFacetUpdateSort,
   logFacetClearAll,
   logFacetShowMore,
+  logFacetShowLess,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
@@ -125,15 +126,13 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },
     /**
-     * Displays less values for the current selected category if they exist
+     * Resets the number of displayed values to the initially configured value
      */
     showLessValues() {
-      const {facetId, numberOfValues: increment} = options;
+      const {facetId, numberOfValues} = options;
 
-      const {values} = this.state;
-      const numberOfValues = Math.max(0, values.length - increment);
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(executeSearch(logFacetShowMore(facetId)));
+      dispatch(executeSearch(logFacetShowLess(facetId)));
     },
     /**  @returns The state of the `CategoryFacet` controller.*/
     get state() {
