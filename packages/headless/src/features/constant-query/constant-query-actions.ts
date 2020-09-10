@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 /**
- * Sets cq to the value provided iff it is currently empty.
+ * Sets cq to the value provided if it is currently empty.
  * @param {string} cq The value for the new constant query.
  */
 export const registerConstantQuery = createAction<string>(
