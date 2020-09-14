@@ -10,6 +10,7 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
+  selectCategoryFacetSearchResult,
 } from './category-facet-set-actions';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {getHistoryEmptyState} from '../../history/history-slice';
@@ -17,7 +18,11 @@ import {change} from '../../history/history-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request';
 import * as FacetReducers from '../generic/facet-reducer-helpers';
-import {CategoryFacetSortCriterion} from './interfaces/request';
+import {
+  CategoryFacetSortCriterion,
+  CategoryFacetValueRequest,
+} from './interfaces/request';
+import {buildMockCategoryFacetSearchResult} from '../../../test/mock-category-facet-search-result';
 
 describe('category facet slice', () => {
   const facetId = '1';
@@ -330,6 +335,66 @@ describe('category facet slice', () => {
           expect(parent.state).toBe('selected');
         });
       });
+    });
+  });
+
+  describe('#selectCategoryFacetSearchResult', () => {
+    beforeEach(() => {
+      state[facetId] = buildMockCategoryFacetRequest();
+    });
+
+    it('when the passed id is not registered, it does not throw', () => {
+      const searchResult = buildMockCategoryFacetSearchResult();
+      const action = selectCategoryFacetSearchResult({
+        facetId: 'notExistant',
+        numberOfValues: 5,
+        searchResult,
+      });
+
+      expect(() => categoryFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('when the result is at the base path currentValues only contains the selected value', () => {
+      const searchResult = buildMockCategoryFacetSearchResult();
+      const expectedRequest: CategoryFacetValueRequest = buildMockCategoryFacetValueRequest(
+        {
+          retrieveChildren: true,
+          state: 'selected',
+        }
+      );
+      const action = selectCategoryFacetSearchResult({
+        facetId,
+        numberOfValues: 0,
+        searchResult,
+      });
+      const nextState = categoryFacetSetReducer(state, action);
+      expect(nextState[facetId].currentValues.length).toEqual(1);
+      expect(nextState[facetId].currentValues).toContainEqual(expectedRequest);
+    });
+
+    it('when the result is at a nested path currentValues contains the correct tree', () => {
+      const searchResult = buildMockCategoryFacetSearchResult({
+        path: ['level1'],
+      });
+      const expectedRequest: CategoryFacetValueRequest = buildMockCategoryFacetValueRequest(
+        {
+          children: [
+            buildMockCategoryFacetValueRequest({
+              state: 'selected',
+              retrieveChildren: true,
+            }),
+          ],
+          value: 'level1',
+        }
+      );
+      const action = selectCategoryFacetSearchResult({
+        facetId,
+        numberOfValues: 0,
+        searchResult,
+      });
+      const nextState = categoryFacetSetReducer(state, action);
+      expect(nextState[facetId].currentValues.length).toEqual(1);
+      expect(nextState[facetId].currentValues).toContainEqual(expectedRequest);
     });
   });
 });

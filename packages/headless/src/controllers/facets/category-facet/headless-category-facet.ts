@@ -8,6 +8,7 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
+  selectCategoryFacetSearchResult,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {facetSelector} from '../../../features/facets/facet-set/facet-set-selectors';
 import {
@@ -32,6 +33,7 @@ import {
   FacetSearchOptions,
 } from '../../../features/facets/facet-search-set/facet-search-request-options';
 import {buildCategoryFacetSearch} from '../facet-search/category/headless-category-facet-search';
+import {CategoryFacetSearchResult} from '../../../api/search/facet-search/category-facet-search/category-facet-search-response';
 
 export type CategoryFacetProps = {
   options: CategoryFacetOptions;
@@ -153,6 +155,17 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(executeSearch(logFacetShowLess(facetId)));
     },
+    /**
+     * Selects the provided value if unselected
+     * @param result A single categoryFacetSearchResult object
+     */
+    selectSearchResult(searchResult: CategoryFacetSearchResult) {
+      const {numberOfValues} = options;
+      dispatch(
+        selectCategoryFacetSearchResult({facetId, numberOfValues, searchResult})
+      );
+      dispatch(executeSearch(logFacetShowLess(facetId)));
+    },
     /**  @returns The state of the `CategoryFacet` controller.*/
     get state() {
       const request = getRequest();
@@ -194,7 +207,7 @@ function partitionIntoParentsAndValues(
 
   let parents: CategoryFacetValue[] = [];
   let values = response.values;
-
+  console.log(values);
   while (values.length && values[0].children.length) {
     parents = [...parents, ...values];
     values = values[0].children;

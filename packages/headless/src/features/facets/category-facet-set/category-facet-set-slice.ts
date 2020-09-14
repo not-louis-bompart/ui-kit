@@ -9,6 +9,7 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
+  selectCategoryFacetSearchResult,
 } from './category-facet-set-actions';
 import {
   CategoryFacetRegistrationOptions,
@@ -102,6 +103,53 @@ export const categoryFacetSetReducer = createReducer(
           );
         }
         handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);
+      })
+      .addCase(selectCategoryFacetSearchResult, (state, action) => {
+        const {facetId, searchResult, numberOfValues} = action.payload;
+        const request = state[facetId];
+        handleFacetDeselectAll<CategoryFacetRequest>(state, facetId);
+
+        if (!request) {
+          return;
+        }
+
+        const rootValue = searchResult.path[0] || searchResult.rawValue;
+        let root: CategoryFacetValueRequest = {
+          value: rootValue,
+          retrieveCount: numberOfValues,
+          children: [],
+          state: 'idle',
+          retrieveChildren: false,
+        };
+        request.currentValues.push(root);
+
+        for (const segment of searchResult.path.slice(1)) {
+          const next: CategoryFacetValueRequest = {
+            value: segment,
+            retrieveCount: numberOfValues,
+            children: [],
+            state: 'idle',
+            retrieveChildren: false,
+          };
+          root.children.push(next);
+          root = next;
+        }
+
+        if (root.value !== searchResult.rawValue) {
+          const next: CategoryFacetValueRequest = {
+            value: searchResult.rawValue,
+            retrieveCount: numberOfValues,
+            children: [],
+            state: 'idle',
+            retrieveChildren: false,
+          };
+          root.children.push(next);
+          root = next;
+        }
+
+        request.numberOfValues = 1;
+        root.state = 'selected';
+        root.retrieveChildren = true;
       });
   }
 );

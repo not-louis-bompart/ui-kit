@@ -6,6 +6,7 @@ import {
   updateFacetNumberOfValues,
 } from '../facet-set/facet-set-actions';
 import {CategoryFacetSortCriterion} from './interfaces/request';
+import {CategoryFacetSearchResult} from '../../../api/search/facet-search/category-facet-search/category-facet-search-response';
 
 /**
  * Register a category facet in the category facet set.
@@ -28,6 +29,14 @@ export const deselectAllCategoryFacetValues = deselectAllFacetValues;
 
 /** Updates the number of values of a category facet. */
 export const updateCategoryFacetNumberOfValues = updateFacetNumberOfValues;
+
+/** Selects the corresponding category facet value for the provided
+ * category facet search result */
+export const selectCategoryFacetSearchResult = createAction<{
+  facetId: string;
+  numberOfValues: number;
+  searchResult: CategoryFacetSearchResult;
+}>('categoryFacet/selectSearchResult');
 
 /**
  * Updates the the sort criterion for the category facet

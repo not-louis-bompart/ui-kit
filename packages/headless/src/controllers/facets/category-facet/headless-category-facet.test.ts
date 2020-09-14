@@ -11,6 +11,7 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
+  selectCategoryFacetSearchResult,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
@@ -23,6 +24,7 @@ import {
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import * as CategoryFacetSearch from '../facet-search/category/headless-category-facet-search';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
+import {buildMockCategoryFacetSearchResult} from '../../../test/mock-category-facet-search-result';
 
 describe('category facet', () => {
   const facetId = '1';
@@ -425,5 +427,29 @@ describe('category facet', () => {
     expect(CategoryFacetSearch.buildCategoryFacetSearch).toHaveBeenCalledTimes(
       1
     );
+  });
+
+  describe('#selectSearchResult', () => {
+    const searchResult = buildMockCategoryFacetSearchResult();
+
+    beforeEach(() => {
+      categoryFacet.selectSearchResult(searchResult);
+    });
+
+    it('#selectSearchResult dispatches #selectCategoryFacetSearchResult action', () => {
+      const action = selectCategoryFacetSearchResult({
+        facetId,
+        numberOfValues: 5,
+        searchResult,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('#selectSearchResult dispatches #executeSearch action', () => {
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
   });
 });
