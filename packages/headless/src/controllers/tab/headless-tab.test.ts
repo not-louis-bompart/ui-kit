@@ -1,6 +1,9 @@
 import {MockEngine, buildMockEngine} from '../../test/mock-engine';
 import {TabProps, buildTab, Tab} from './headless-tab';
-import {updateConstantQuery} from '../../features/constant-query/constant-query-actions';
+import {
+  registerConstantQuery,
+  updateConstantQuery,
+} from '../../features/constant-query/constant-query-actions';
 
 describe('Tab', () => {
   const expression = 'abc123';
@@ -24,7 +27,7 @@ describe('Tab', () => {
   });
 
   describe('initalization', () => {
-    it('calls #updateConstantQuery if isActive is true', () => {
+    it('calls #registerConstantQuery if isActive is true', () => {
       props = {
         expression,
         initialState: {
@@ -33,7 +36,7 @@ describe('Tab', () => {
       };
       initTab();
 
-      const action = updateConstantQuery(expression);
+      const action = registerConstantQuery(expression);
       expect(engine.actions).toContainEqual(action);
     });
   });
