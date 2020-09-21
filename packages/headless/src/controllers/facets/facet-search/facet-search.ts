@@ -2,7 +2,6 @@ import {Engine} from '../../../app/headless-engine';
 import {
   updateFacetSearch,
   executeFacetSearch,
-  selectFacetSearchResult,
 } from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {executeSearch} from '../../../features/search/search-actions';
 import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
@@ -64,7 +63,6 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
 
     /** Selects a search result.*/
     select(value: SpecificFacetSearchResult) {
-      dispatch(selectFacetSearchResult({facetId, value}));
       dispatch(
         executeSearch(logFacetSelect({facetId, facetValue: value.rawValue}))
       );

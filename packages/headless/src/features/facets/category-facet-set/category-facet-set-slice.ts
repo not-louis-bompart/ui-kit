@@ -9,7 +9,6 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
-  selectCategoryFacetSearchResult,
 } from './category-facet-set-actions';
 import {
   CategoryFacetRegistrationOptions,
@@ -21,6 +20,7 @@ import {
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
 } from '../generic/facet-reducer-helpers';
+import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
 
 export type CategoryFacetSetState = Record<string, CategoryFacetRequest>;
 
@@ -105,7 +105,7 @@ export const categoryFacetSetReducer = createReducer(
         handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);
       })
       .addCase(selectCategoryFacetSearchResult, (state, action) => {
-        const {facetId, searchResult, numberOfValues} = action.payload;
+        const {facetId, value} = action.payload;
         const request = state[facetId];
         handleFacetDeselectAll<CategoryFacetRequest>(state, facetId);
 
@@ -113,43 +113,20 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        const rootValue = searchResult.path[0] || searchResult.rawValue;
-        let root: CategoryFacetValueRequest = {
-          value: rootValue,
-          retrieveCount: numberOfValues,
-          children: [],
-          state: 'idle',
-          retrieveChildren: false,
-        };
-        request.currentValues.push(root);
+        value.path.push(value.rawValue);
+        let curr = buildCategoryFacetValueRequest(value.path[0]);
+        request.currentValues.push(curr);
 
-        for (const segment of searchResult.path.slice(1)) {
-          const next: CategoryFacetValueRequest = {
-            value: segment,
-            retrieveCount: numberOfValues,
-            children: [],
-            state: 'idle',
-            retrieveChildren: false,
-          };
-          root.children.push(next);
-          root = next;
+        for (const segment of value.path.splice(1)) {
+          const next = buildCategoryFacetValueRequest(segment);
+          curr.children.push(next);
+          curr = next;
         }
 
-        if (root.value !== searchResult.rawValue) {
-          const next: CategoryFacetValueRequest = {
-            value: searchResult.rawValue,
-            retrieveCount: numberOfValues,
-            children: [],
-            state: 'idle',
-            retrieveChildren: false,
-          };
-          root.children.push(next);
-          root = next;
-        }
+        curr.state = 'selected';
+        curr.retrieveChildren = true;
 
         request.numberOfValues = 1;
-        root.state = 'selected';
-        root.retrieveChildren = true;
       });
   }
 );
@@ -173,6 +150,18 @@ function buildCategoryFacetRequest(
     preventAutoSelect: false,
     type: 'hierarchical',
     ...config,
+  };
+}
+
+function buildCategoryFacetValueRequest(
+  value: string
+): CategoryFacetValueRequest {
+  return {
+    value,
+    retrieveCount: 5,
+    children: [],
+    state: 'idle',
+    retrieveChildren: false,
   };
 }
 
