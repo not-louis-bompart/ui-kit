@@ -70,6 +70,10 @@ export namespace Components {
     }
     interface AtomicSortDropdown {
     }
+    interface AtomicTab {
+        "expression": string;
+        "isActive": boolean;
+    }
     interface ChildComponent {
         "error"?: Error;
     }
@@ -196,6 +200,12 @@ declare global {
         prototype: HTMLAtomicSortDropdownElement;
         new (): HTMLAtomicSortDropdownElement;
     };
+    interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
+    }
+    var HTMLAtomicTabElement: {
+        prototype: HTMLAtomicTabElement;
+        new (): HTMLAtomicTabElement;
+    };
     interface HTMLChildComponentElement extends Components.ChildComponent, HTMLStencilElement {
     }
     var HTMLChildComponentElement: {
@@ -234,6 +244,7 @@ declare global {
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
+        "atomic-tab": HTMLAtomicTabElement;
         "child-component": HTMLChildComponentElement;
         "child-component-1": HTMLChildComponent1Element;
         "child-component-errored": HTMLChildComponentErroredElement;
@@ -299,6 +310,10 @@ declare namespace LocalJSX {
     }
     interface AtomicSortDropdown {
     }
+    interface AtomicTab {
+        "expression"?: string;
+        "isActive"?: boolean;
+    }
     interface ChildComponent {
         "error"?: Error;
     }
@@ -329,6 +344,7 @@ declare namespace LocalJSX {
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
+        "atomic-tab": AtomicTab;
         "child-component": ChildComponent;
         "child-component-1": ChildComponent1;
         "child-component-errored": ChildComponentErrored;
@@ -357,6 +373,7 @@ declare module "@stencil/core" {
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
+            "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "child-component": LocalJSX.ChildComponent & JSXBase.HTMLAttributes<HTMLChildComponentElement>;
             "child-component-1": LocalJSX.ChildComponent1 & JSXBase.HTMLAttributes<HTMLChildComponent1Element>;
             "child-component-errored": LocalJSX.ChildComponentErrored & JSXBase.HTMLAttributes<HTMLChildComponentErroredElement>;
