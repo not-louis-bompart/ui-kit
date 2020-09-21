@@ -11,7 +11,6 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
-  selectCategoryFacetSearchResult,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
@@ -25,6 +24,7 @@ import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-r
 import * as CategoryFacetSearch from '../facet-search/category/headless-category-facet-search';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSearchResult} from '../../../test/mock-category-facet-search-result';
+import {selectCategoryFacetSearchResult} from '../../../features/facets/facet-search-set/category/category-facet-search-actions';
 
 describe('category facet', () => {
   const facetId = '1';
@@ -430,17 +430,16 @@ describe('category facet', () => {
   });
 
   describe('#selectSearchResult', () => {
-    const searchResult = buildMockCategoryFacetSearchResult();
+    const value = buildMockCategoryFacetSearchResult();
 
     beforeEach(() => {
-      categoryFacet.selectSearchResult(searchResult);
+      categoryFacet.facetSearch.select(value);
     });
 
     it('#selectSearchResult dispatches #selectCategoryFacetSearchResult action', () => {
       const action = selectCategoryFacetSearchResult({
         facetId,
-        numberOfValues: 5,
-        searchResult,
+        value,
       });
       expect(engine.actions).toContainEqual(action);
     });

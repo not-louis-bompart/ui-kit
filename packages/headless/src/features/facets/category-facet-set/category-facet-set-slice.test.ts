@@ -10,7 +10,6 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
-  selectCategoryFacetSearchResult,
 } from './category-facet-set-actions';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {getHistoryEmptyState} from '../../history/history-slice';
@@ -23,6 +22,7 @@ import {
   CategoryFacetValueRequest,
 } from './interfaces/request';
 import {buildMockCategoryFacetSearchResult} from '../../../test/mock-category-facet-search-result';
+import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
 
 describe('category facet slice', () => {
   const facetId = '1';
@@ -344,18 +344,17 @@ describe('category facet slice', () => {
     });
 
     it('when the passed id is not registered, it does not throw', () => {
-      const searchResult = buildMockCategoryFacetSearchResult();
+      const value = buildMockCategoryFacetSearchResult();
       const action = selectCategoryFacetSearchResult({
         facetId: 'notExistant',
-        numberOfValues: 5,
-        searchResult,
+        value,
       });
 
       expect(() => categoryFacetSetReducer(state, action)).not.toThrow();
     });
 
     it('when the result is at the base path currentValues only contains the selected value', () => {
-      const searchResult = buildMockCategoryFacetSearchResult();
+      const value = buildMockCategoryFacetSearchResult();
       const expectedRequest: CategoryFacetValueRequest = buildMockCategoryFacetValueRequest(
         {
           retrieveChildren: true,
@@ -364,8 +363,7 @@ describe('category facet slice', () => {
       );
       const action = selectCategoryFacetSearchResult({
         facetId,
-        numberOfValues: 0,
-        searchResult,
+        value,
       });
       const nextState = categoryFacetSetReducer(state, action);
       expect(nextState[facetId].currentValues.length).toEqual(1);
@@ -373,7 +371,7 @@ describe('category facet slice', () => {
     });
 
     it('when the result is at a nested path currentValues contains the correct tree', () => {
-      const searchResult = buildMockCategoryFacetSearchResult({
+      const value = buildMockCategoryFacetSearchResult({
         path: ['level1'],
       });
       const expectedRequest: CategoryFacetValueRequest = buildMockCategoryFacetValueRequest(
@@ -389,8 +387,7 @@ describe('category facet slice', () => {
       );
       const action = selectCategoryFacetSearchResult({
         facetId,
-        numberOfValues: 0,
-        searchResult,
+        value,
       });
       const nextState = categoryFacetSetReducer(state, action);
       expect(nextState[facetId].currentValues.length).toEqual(1);

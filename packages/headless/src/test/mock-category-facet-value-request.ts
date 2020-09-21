@@ -8,7 +8,7 @@ export function buildMockCategoryFacetValueRequest(
     state: 'idle',
     children: [],
     retrieveChildren: false,
-    retrieveCount: 0,
+    retrieveCount: 5,
     ...config,
   };
 }
