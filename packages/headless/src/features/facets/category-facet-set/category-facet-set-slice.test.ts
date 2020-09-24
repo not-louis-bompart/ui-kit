@@ -149,6 +149,18 @@ describe('category facet slice', () => {
     expect(finalState[facetId].currentValues[0].retrieveCount).toBe(10);
   });
 
+  it('dispatching #updateCategoryFacetNumberOfValues should return when facetId does not exist', () => {
+    state[facetId] = buildMockCategoryFacetRequest({facetId});
+    categoryFacetSetReducer(
+      state,
+      updateCategoryFacetNumberOfValues({
+        facetId: '',
+        numberOfValues: 20,
+      })
+    );
+    expect(updateCategoryFacetNumberOfValues).toReturn();
+  });
+
   describe('#toggleSelectCategoryFacetValue', () => {
     it('when the passed id is not registered, it does not throw', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
