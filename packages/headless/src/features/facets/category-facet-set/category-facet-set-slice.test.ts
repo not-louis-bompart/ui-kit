@@ -149,8 +149,7 @@ describe('category facet slice', () => {
     expect(finalState[facetId].currentValues[0].retrieveCount).toBe(10);
   });
 
-  it('dispatching #updateCategoryFacetNumberOfValues should return when facetId does not exist', () => {
-    state[facetId] = buildMockCategoryFacetRequest({facetId});
+  it('dispatching #updateCategoryFacetNumberOfValues should not throw when facetId does not exist', () => {
     expect(() =>
       categoryFacetSetReducer(
         state,
