@@ -23,7 +23,7 @@ export function buildTab(engine: Engine, props: TabProps) {
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  if (props.initialState.isActive) {
+  if (props.initialState?.isActive) {
     dispatch(registerConstantQuery(props.expression));
   }
 
