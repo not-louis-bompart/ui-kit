@@ -371,6 +371,7 @@ describe('category facet slice', () => {
         {
           retrieveChildren: true,
           state: 'selected',
+          retrieveCount: 5,
         }
       );
       const action = selectCategoryFacetSearchResult({
@@ -392,9 +393,13 @@ describe('category facet slice', () => {
             buildMockCategoryFacetValueRequest({
               state: 'selected',
               retrieveChildren: true,
+              retrieveCount: 5,
             }),
           ],
           value: 'level1',
+          retrieveCount: 5,
+          retrieveChildren: false,
+          state: 'idle',
         }
       );
       const action = selectCategoryFacetSearchResult({
