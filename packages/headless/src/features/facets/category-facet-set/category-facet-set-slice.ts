@@ -116,11 +116,11 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        value.path.push(value.rawValue);
-        let curr = buildCategoryFacetValueRequest(value.path[0]);
+        const path = [...value.path, value.rawValue];
+        let curr = buildCategoryFacetValueRequest(path[0]);
         request.currentValues.push(curr);
 
-        for (const segment of value.path.splice(1)) {
+        for (const segment of path.splice(1)) {
           const next = buildCategoryFacetValueRequest(segment);
           curr.children.push(next);
           curr = next;
