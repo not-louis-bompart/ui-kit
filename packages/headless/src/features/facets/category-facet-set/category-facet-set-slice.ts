@@ -110,11 +110,12 @@ export const categoryFacetSetReducer = createReducer(
       .addCase(selectCategoryFacetSearchResult, (state, action) => {
         const {facetId, value} = action.payload;
         const request = state[facetId];
-        handleFacetDeselectAll<CategoryFacetRequest>(state, facetId);
 
         if (!request) {
           return;
         }
+
+        handleFacetDeselectAll(state, facetId);
 
         const path = [...value.path, value.rawValue];
         let curr = buildCategoryFacetValueRequest(path[0]);
