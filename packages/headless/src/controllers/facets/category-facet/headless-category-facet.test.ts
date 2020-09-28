@@ -23,8 +23,6 @@ import {
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import * as CategoryFacetSearch from '../facet-search/category/headless-category-facet-search';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
-import {buildMockCategoryFacetSearchResult} from '../../../test/mock-category-facet-search-result';
-import {selectCategoryFacetSearchResult} from '../../../features/facets/facet-search-set/category/category-facet-search-actions';
 
 describe('category facet', () => {
   const facetId = '1';
@@ -427,28 +425,5 @@ describe('category facet', () => {
     expect(CategoryFacetSearch.buildCategoryFacetSearch).toHaveBeenCalledTimes(
       1
     );
-  });
-
-  describe('#selectSearchResult', () => {
-    const value = buildMockCategoryFacetSearchResult();
-
-    beforeEach(() => {
-      categoryFacet.facetSearch.select(value);
-    });
-
-    it('#selectSearchResult dispatches #selectCategoryFacetSearchResult action', () => {
-      const action = selectCategoryFacetSearchResult({
-        facetId,
-        value,
-      });
-      expect(engine.actions).toContainEqual(action);
-    });
-
-    it('#selectSearchResult dispatches #executeSearch action', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
-    });
   });
 });
