@@ -3,6 +3,9 @@ export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentTypes = 'application/json' | 'text/html';
 import {backOff} from 'exponential-backoff';
 
+function isThrottled(status: number): boolean {
+  return status === 429;
+}
 export interface PlatformClientCallOptions<RequestParams> {
   url: string;
   method: HttpMethods;
@@ -30,14 +33,14 @@ export class PlatformClient {
         },
         body: JSON.stringify(options.requestParams),
       });
-      if (response.status === 429) {
+      if (isThrottled(response.status)) {
         throw response;
       }
       return response;
     };
     const response = await backOff(request, {
       retry: (e: Response) => {
-        return e && e.status === 429;
+        return e && isThrottled(e.status);
       },
     });
     if (response.status === 419) {
