@@ -9,7 +9,7 @@ import {logInterfaceChange} from '../../features/analytics/analytics-actions';
 
 export interface TabProps {
   expression: string;
-  initialState: Partial<TabInitialState>;
+  initialState?: Partial<TabInitialState>;
 }
 
 export interface TabInitialState {
