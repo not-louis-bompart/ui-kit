@@ -2,7 +2,6 @@ import fetch from 'cross-fetch';
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentTypes = 'application/json' | 'text/html';
 import {backOff} from 'exponential-backoff';
-import {SearchAPIErrorWithStatusCode} from './search/search-api-error-response';
 
 export interface PlatformClientCallOptions<RequestParams> {
   url: string;
@@ -22,8 +21,8 @@ export class PlatformClient {
   static async call<RequestParams, ResponseType>(
     options: PlatformClientCallOptions<RequestParams>
   ): Promise<PlatformResponse<ResponseType>> {
-    const request = () =>
-      fetch(options.url, {
+    const request = async () => {
+      const response = await fetch(options.url, {
         method: options.method,
         headers: {
           'Content-Type': options.contentType,
@@ -31,7 +30,16 @@ export class PlatformClient {
         },
         body: JSON.stringify(options.requestParams),
       });
-    let response = await request();
+      if (response.status === 429) {
+        throw response;
+      }
+      return response;
+    };
+    const response = await backOff(request, {
+      retry: (e: Response) => {
+        return e && e.status === 429;
+      },
+    });
     if (response.status === 419) {
       const accessToken = await options.renewAccessToken();
 
@@ -39,25 +47,10 @@ export class PlatformClient {
         return PlatformClient.call({...options, accessToken});
       }
     }
-
-    if (response.status === 429) {
-      response = await PlatformClient.throttleBackOff(request);
-    }
     return {
       response,
       body: (await response.json()) as ResponseType,
     };
-  }
-
-  static async throttleBackOff(
-    request: () => Promise<Response>
-  ): Promise<Response> {
-    const options = {
-      retry: (e: SearchAPIErrorWithStatusCode) => {
-        return e && e.statusCode === 429;
-      },
-    };
-    return await backOff(request, options);
   }
 }
 
