@@ -103,4 +103,29 @@ describe('PlatformClient call', () => {
 
     done();
   });
+
+  it('when status is 429 should try exponential backOff', async (done) => {
+    mockFetch
+      .mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 429}))
+      )
+      .mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+      );
+
+    await platformCall();
+
+    expect(mockFetch).toHaveBeenNthCalledWith(2, platformUrl(), {
+      body: JSON.stringify({
+        test: 123,
+      }),
+      headers: {
+        Authorization: 'Bearer accessToken1',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    });
+
+    done();
+  });
 });
