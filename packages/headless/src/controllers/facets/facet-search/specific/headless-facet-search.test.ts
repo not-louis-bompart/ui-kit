@@ -5,7 +5,12 @@ import {
 } from './headless-facet-search';
 import {buildMockEngine, MockEngine} from '../../../../test/mock-engine';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
-import {registerFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {
+  registerFacetSearch,
+  selectFacetSearchResult,
+} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {buildMockCategoryFacetSearchResult} from '../../../../test/mock-category-facet-search-result';
+import {executeSearch} from '../../../../features/search/search-actions';
 
 describe('FacetSearch', () => {
   const facetId = '1';
@@ -38,5 +43,28 @@ describe('FacetSearch', () => {
   it('calling #state returns the latest state', () => {
     engine.state.facetSearchSet[facetId].isLoading = true;
     expect(controller.state.isLoading).toBe(true);
+  });
+
+  describe('#select', () => {
+    const value = buildMockCategoryFacetSearchResult();
+
+    beforeEach(() => {
+      controller.select(value);
+    });
+
+    it('#select dispatches #selectCategoryFacetSearchResult action', () => {
+      const action = selectFacetSearchResult({
+        facetId,
+        value,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('#select dispatches #executeSearch action', () => {
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
   });
 });

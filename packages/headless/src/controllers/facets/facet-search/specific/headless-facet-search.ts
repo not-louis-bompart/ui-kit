@@ -31,7 +31,7 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
 
     /**
      * Selects the provided value if unselected
-     * @param result A single categoryFacetSearchResult object
+     * @param result A single specificFacetSearchResult object
      */
     select(value: SpecificFacetSearchResult) {
       dispatch(selectFacetSearchResult({facetId, value}));
