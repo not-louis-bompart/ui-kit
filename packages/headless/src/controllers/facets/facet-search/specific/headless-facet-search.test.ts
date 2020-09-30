@@ -9,8 +9,8 @@ import {
   registerFacetSearch,
   selectFacetSearchResult,
 } from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {buildMockCategoryFacetSearchResult} from '../../../../test/mock-category-facet-search-result';
 import {executeSearch} from '../../../../features/search/search-actions';
+import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
 
 describe('FacetSearch', () => {
   const facetId = '1';
@@ -46,7 +46,7 @@ describe('FacetSearch', () => {
   });
 
   describe('#select', () => {
-    const value = buildMockCategoryFacetSearchResult();
+    const value = buildMockFacetSearchResult();
 
     beforeEach(() => {
       controller.select(value);
