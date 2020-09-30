@@ -110,22 +110,15 @@ describe('PlatformClient call', () => {
         Promise.resolve(new Response(JSON.stringify({}), {status: 429}))
       )
       .mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 429}))
+      )
+      .mockReturnValueOnce(
         Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
       );
 
     await platformCall();
 
-    expect(mockFetch).toHaveBeenNthCalledWith(2, platformUrl(), {
-      body: JSON.stringify({
-        test: 123,
-      }),
-      headers: {
-        Authorization: 'Bearer accessToken1',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    });
-
+    expect(mockFetch).toHaveBeenCalledTimes(3);
     done();
   });
 });
