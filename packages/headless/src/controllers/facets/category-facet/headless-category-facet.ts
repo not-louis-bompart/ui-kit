@@ -195,7 +195,7 @@ function partitionIntoParentsAndValues(
 
   let parents: CategoryFacetValue[] = [];
   let values = response.values;
-  console.log(values);
+
   while (values.length && values[0].children.length) {
     parents = [...parents, ...values];
     values = values[0].children;
