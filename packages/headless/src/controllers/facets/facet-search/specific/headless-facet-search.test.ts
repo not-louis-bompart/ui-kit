@@ -52,7 +52,7 @@ describe('FacetSearch', () => {
       controller.select(value);
     });
 
-    it('#select dispatches #selectCategoryFacetSearchResult action', () => {
+    it('#select dispatches #selectFacetSearchResult action', () => {
       const action = selectFacetSearchResult({
         facetId,
         value,
