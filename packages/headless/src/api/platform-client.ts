@@ -38,22 +38,30 @@ export class PlatformClient {
       }
       return response;
     };
-    const response = await backOff(request, {
-      retry: (e: Response) => {
-        return e && isThrottled(e.status);
-      },
-    });
-    if (response.status === 419) {
-      const accessToken = await options.renewAccessToken();
 
-      if (accessToken !== '') {
-        return PlatformClient.call({...options, accessToken});
+    try {
+      const response = await backOff(request, {
+        retry: (e: Response) => {
+          return e && isThrottled(e.status);
+        },
+      });
+      if (response.status === 419) {
+        const accessToken = await options.renewAccessToken();
+
+        if (accessToken !== '') {
+          return PlatformClient.call({...options, accessToken});
+        }
       }
+      return {
+        response,
+        body: (await response.json()) as ResponseType,
+      };
+    } catch (error) {
+      return {
+        response: error,
+        body: (await error.json()) as ResponseType,
+      };
     }
-    return {
-      response,
-      body: (await response.json()) as ResponseType,
-    };
   }
 }
 
