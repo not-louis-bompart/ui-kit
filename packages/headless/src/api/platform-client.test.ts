@@ -1,4 +1,5 @@
 import {platformUrl, PlatformClient} from './platform-client';
+import * as BackOff from 'exponential-backoff';
 
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
@@ -119,6 +120,16 @@ describe('PlatformClient call', () => {
     await platformCall();
 
     expect(mockFetch).toHaveBeenCalledTimes(3);
+    done();
+  });
+
+  it('should not throw and return a response when backOff returns a rejected promise', async (done) => {
+    const spy = jest.spyOn(BackOff, 'backOff');
+    const mockResponse = new Response(JSON.stringify({}), {status: 429});
+    spy.mockRejectedValue(mockResponse);
+    const response = await platformCall();
+    expect(spy).not.toThrow();
+    expect(response.response).toBe(mockResponse);
     done();
   });
 });
